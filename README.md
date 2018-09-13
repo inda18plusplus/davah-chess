@@ -1,3 +1,10 @@
 # davah-chess
 
-So far severely underdocumented, undertested, and missing castling, en passant, and a way to tell when the game has ended.
+Still undertested.
+
+Todo:
+
+* Castling
+* En passant
+* Telling when the game has ended
+* More tests
