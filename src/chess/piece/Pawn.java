@@ -113,7 +113,7 @@ public class Pawn extends Piece {
     int enPassantToRank = lastMovedPiece.getPosition().getRank() + forwardRankDiff;
     int enPassantToFile = lastMovedPiece.getPosition().getFile();
     Position enPassantTo = new Position(enPassantToRank, enPassantToFile);
-    Move enPassant = new EnPassant(this.getPosition(), enPassantTo);
+    Move enPassant = new EnPassant(this.getPosition(), enPassantTo, lastMovedPiece.getPosition());
     moves.add(enPassant);
     return moves;
   }
