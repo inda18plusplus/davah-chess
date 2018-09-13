@@ -27,7 +27,8 @@ public abstract class Piece {
   }
 
   /**
-   * Abstract method to calculate all positions a piece can reach, except through castling.
+   * Abstract method to calculate all positions a piece can reach, except through castling or en
+   * passant.
    *
    * @param board The board the piece is standing on.
    * @return A list of all possible moves for the piece.
@@ -47,7 +48,7 @@ public abstract class Piece {
    * Calculates all possible moves for a piece.
    *
    * @param board The board the piece is standing on.
-   * @param history The history of that board (relevant to castling).
+   * @param history The history of that board (relevant to some special moves).
    * @return A list of all possible moves for the piece.
    */
   public ArrayList<Move> getMoves(Board board, History history) {

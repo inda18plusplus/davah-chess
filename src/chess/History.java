@@ -7,12 +7,11 @@ import java.util.ArrayList;
 /** Implements the history of a chess board. */
 public class History {
 
-  private final Board initialBoard;
   private ArrayList<Move> moves;
   private int movesWithoutPawnMove;
 
-  public History(Board initialBoard) {
-    this.initialBoard = initialBoard;
+  public History() {
+    this.moves = new ArrayList<>();
     this.movesWithoutPawnMove = 0;
   }
 
@@ -33,6 +32,18 @@ public class History {
       }
     }
     return false;
+  }
+
+  /**
+   * Returns the last executed move.
+   *
+   * @return That move.
+   */
+  public Move getLastMove() {
+    if (moves.isEmpty()) {
+      return null;
+    }
+    return moves.get(moves.size() - 1);
   }
 
   public int getMovesWithoutPawnMove() {

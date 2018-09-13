@@ -109,7 +109,7 @@ public class Game {
       return false;
     }
     state = State.PLAY;
-    history = new History(board);
+    history = new History();
     currentPlayer = Player.WHITE;
     return true;
   }

@@ -11,14 +11,14 @@ import java.util.ArrayList;
 public class King extends Piece {
 
   private static final Step[] KING_MOVES = {
-          new Step(-1, 0),
-          new Step(-1, 1),
-          new Step(0, 1),
-          new Step(1, 1),
-          new Step(1, 0),
-          new Step(1, -1),
-          new Step(0, -1),
-          new Step(-1, -1)
+    new Step(-1, 0),
+    new Step(-1, 1),
+    new Step(0, 1),
+    new Step(1, 1),
+    new Step(1, 0),
+    new Step(1, -1),
+    new Step(0, -1),
+    new Step(-1, -1)
   };
 
   public King(Position position, Game.Player player) {

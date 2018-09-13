@@ -4,9 +4,7 @@ import chess.Board;
 import chess.Game;
 import chess.Position;
 
-/**
- * Implements a single move in a chess game.
- */
+/** Implements a single move in a chess game. */
 public abstract class Move {
 
   private Position posBefore;
@@ -26,6 +24,7 @@ public abstract class Move {
 
   /**
    * Parses algebraic notation to create a move, given the board and current player.
+   *
    * @param moveNotation Algebraic notation of a move.
    * @param board The board the move will be carried out on.
    * @param player The current player.
@@ -63,5 +62,4 @@ public abstract class Move {
   public String getIdentifier() {
     return identifier;
   }
-
 }
