@@ -5,20 +5,23 @@ import chess.piece.Piece;
 
 import java.util.ArrayList;
 
-/**
- * Implements a single chess game.
- */
+/** Implements a single chess game, and is the only class the user must interact with. */
 public class Game {
 
   public static final int RANK_COUNT = 8;
   public static final int FILE_COUNT = 8;
 
-  private enum State {
-    SETUP, PLAY, WHITE_WIN, DRAW, BLACK_WIN
+  private enum State { // TODO: Write function to display this.
+    SETUP,
+    PLAY,
+    WHITE_WIN,
+    DRAW,
+    BLACK_WIN
   }
 
   public enum Player {
-    BLACK, WHITE
+    BLACK,
+    WHITE
   }
 
   public static Player otherPlayer(Player player) {
@@ -35,6 +38,14 @@ public class Game {
     board = new Board();
   }
 
+  /**
+   * Places a piece on the board, while in setup mode.
+   *
+   * @param rank Rank to place the piece on.
+   * @param file File to place the piece on.
+   * @param asciiPiece Ascii representation of the piece.
+   * @return Whether the placement was successful.
+   */
   public boolean placePiece(int rank, int file, char asciiPiece) {
     if (state == State.SETUP) {
       Position position = new Position(rank, file);
@@ -45,6 +56,13 @@ public class Game {
     }
   }
 
+  /**
+   * Removes a piece from the board, during setup mode.
+   *
+   * @param rank Rank to remove the piece from.
+   * @param file File to remove the piece from.
+   * @return Whether the removal was successful.
+   */
   public boolean removePiece(int rank, int file) {
     if (state == State.SETUP) {
       Position position = new Position(rank, file);
@@ -56,6 +74,7 @@ public class Game {
 
   /**
    * Sets up the standard chess board.
+   *
    * @return Whether the setup was successful.
    */
   public boolean setupStandardBoard() {
@@ -77,10 +96,16 @@ public class Game {
     }
   }
 
+  /**
+   * Starts the game, moving from "setup mode" to "play mode", given that both sides have exactly
+   * one king each.
+   *
+   * @return Whether the game started successfully.
+   */
   public boolean startGame() {
     if (state != State.SETUP
-            || board.findKing(Player.WHITE) == null
-            || board.findKing(Player.BLACK) == null) {
+        || board.findKing(Player.WHITE) == null
+        || board.findKing(Player.BLACK) == null) {
       return false;
     }
     state = State.PLAY;
@@ -105,6 +130,12 @@ public class Game {
     return board.getMoves(player, history);
   }
 
+  /**
+   * Calculates whether a move is legal for the current player.
+   *
+   * @param move The move whose legality to check.
+   * @return Whether the move is legal.
+   */
   public boolean isLegal(Move move) {
     ArrayList<Move> legalMoves = this.getMoves(currentPlayer);
     for (Move legalMove : legalMoves) {
@@ -115,7 +146,14 @@ public class Game {
     return false;
   }
 
+  /**
+   * Carries out a move given by the player in a pseudo-algebraic notation.
+   *
+   * @param moveNotation See the implementation of Move.createMove() for details.
+   * @return Whether the move was legal and carried out successfully.
+   */
   public boolean makeMove(String moveNotation) {
+    // TODO: Real alg.not. requires knowledge of the current player (pawn moves, castling)
     Move move = Move.createMove(moveNotation, board);
     if (move == null) {
       return false;
@@ -123,13 +161,19 @@ public class Game {
     return makeMove(move);
   }
 
+  /**
+   * Carries out a given move on the board.
+   *
+   * @param move The move to carry out.
+   * @return Whether the move was legal and carried out successfully.
+   */
   public boolean makeMove(Move move) {
     if (this.isLegal(move)) {
       move.applyTo(board);
+      history.addMove(move);
       currentPlayer = otherPlayer(currentPlayer);
       return true;
     }
     return false;
   }
-
 }

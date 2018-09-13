@@ -3,9 +3,7 @@ package chess;
 import static chess.Game.FILE_COUNT;
 import static chess.Game.RANK_COUNT;
 
-/**
- * Implements a position on a chess board, disregarding its content.
- */
+/** Implements a position on a chess board, disregarding its content. */
 public class Position {
 
   private int rank;
@@ -16,6 +14,11 @@ public class Position {
     this.file = file;
   }
 
+  /**
+   * Calculates whether this position is inside the chess board.
+   *
+   * @return Whether this position is inside the chess board.
+   */
   public boolean insideBoard() {
     boolean rankInsideBoard = 0 <= rank && rank < RANK_COUNT;
     boolean fileInsideBoard = 0 <= file && file < FILE_COUNT;
@@ -38,6 +41,12 @@ public class Position {
     return new Position(rank, file);
   }
 
+  /**
+   * Parses the usual name for a square on the chess board.
+   *
+   * @param positionNotation Name of the square.
+   * @return Position the name refers to, if valid, otherwise null.
+   */
   public static Position createPosition(String positionNotation) {
     if (positionNotation.matches("[a-f][1-8]")) {
       int rank = positionNotation.codePointAt(1) - (int) '1';
@@ -48,10 +57,14 @@ public class Position {
     }
   }
 
+  /**
+   * Converts the position into its usual name.
+   *
+   * @return The name.
+   */
   public String getNotation() {
     char fileNotation = (char) (file + (int) 'a');
     char rankNotation = (char) (rank + (int) '1');
     return "" + fileNotation + rankNotation;
   }
-
 }

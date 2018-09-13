@@ -8,17 +8,22 @@ import chess.piece.Piece;
 
 import java.util.ArrayList;
 
-/**
- * Implements a chess board.
- */
+/** Implements a chess board. */
 public class Board {
 
+  /** Stores the pieces on the board. Empty squares have null. */
   private Piece[][] board;
 
   public Board() {
     board = new Piece[RANK_COUNT][FILE_COUNT];
   }
 
+  /**
+   * Places a piece on the chess board.
+   *
+   * @param piece The piece to be placed (this contains position information too).
+   * @return Whether the placement was successful.
+   */
   public boolean placePiece(Piece piece) {
     Position position = piece.getPosition();
     if (!position.insideBoard()) {
@@ -28,6 +33,12 @@ public class Board {
     return true;
   }
 
+  /**
+   * Removes a piece from the chessboard at a given position.
+   *
+   * @param position The position to remove at.
+   * @return Whether the removal was successful.
+   */
   public boolean removePiece(Position position) {
     if (!position.insideBoard() || this.isEmpty(position)) {
       return false;
@@ -44,6 +55,13 @@ public class Board {
     return this.atPosition(position) == null;
   }
 
+  /**
+   * Calculates whether the given player occupies the given position.
+   *
+   * @param player The player to check for.
+   * @param position The position to check.
+   * @return Whether the given player occupies the given position.
+   */
   public boolean isPlayer(Game.Player player, Position position) {
     if (this.isEmpty(position)) {
       return false;
@@ -51,6 +69,13 @@ public class Board {
     return this.atPosition(position).getPlayer() == player;
   }
 
+  /**
+   * Calculates whether the opposite player occupies the given position.
+   *
+   * @param player The player whose opposite to check for.
+   * @param position The position to check.
+   * @return Whether the opposite player occupies the given position.
+   */
   public boolean isOpposite(Game.Player player, Position position) {
     switch (player) {
       case BLACK:
@@ -62,6 +87,12 @@ public class Board {
     }
   }
 
+  /**
+   * Finds the king of a given color.
+   *
+   * @param player The player whose king to find.
+   * @return The position of the king, null if there are none or multiple such positions.
+   */
   public Position findKing(Game.Player player) {
     char lookingFor = (player == Game.Player.BLACK) ? 'k' : 'K';
     boolean foundIt = false;
@@ -84,6 +115,13 @@ public class Board {
     return position;
   }
 
+  /**
+   * Calculates all possible moves of a given player, given the history of the game.
+   *
+   * @param player The player whose possible moves the function retrieves.
+   * @param history The history of the game, including all past moves.
+   * @return A list of all legal moves of the given player.
+   */
   public ArrayList<Move> getMoves(Game.Player player, History history) {
     ArrayList<Move> moves = new ArrayList<>();
     for (Piece piece : this.getPieces(player)) {
@@ -92,6 +130,12 @@ public class Board {
     return moves;
   }
 
+  /**
+   * Calculates whether the given player is in check.
+   *
+   * @param player The player to investigate.
+   * @return Whether the player is in check.
+   */
   public boolean inCheck(Game.Player player) {
     Game.Player otherPlayer = Game.otherPlayer(player);
     Position kingPosition = this.findKing(player);
@@ -108,6 +152,12 @@ public class Board {
     return false;
   }
 
+  /**
+   * Retrieves all pieces of a particular player.
+   *
+   * @param player The player whose pieces to retrieve.
+   * @return The player's pieces.
+   */
   public ArrayList<Piece> getPieces(Game.Player player) {
     ArrayList<Piece> pieces = new ArrayList<>();
     for (Piece[] rank : board) {
@@ -123,6 +173,11 @@ public class Board {
     return pieces;
   }
 
+  /**
+   * Creates a deep copy of the board.
+   *
+   * @return The copy.
+   */
   public Board getCopy() {
     Board copy = new Board();
     for (Piece[] rank : board) {
@@ -136,7 +191,13 @@ public class Board {
     return copy;
   }
 
-  public String displayAsciiBoard() { //todo: upside down?
+  /**
+   * Returns (but doesn't print) an ASCII representation of the board, as seen from White's
+   * perspective.
+   *
+   * @return The string representing the board.
+   */
+  public String displayAsciiBoard() {
     StringBuilder asciiBoard = new StringBuilder();
     for (int i = RANK_COUNT - 1; i >= 0; i--) {
       for (int j = 0; j < FILE_COUNT; j++) {
@@ -151,5 +212,4 @@ public class Board {
     }
     return asciiBoard.toString();
   }
-
 }
