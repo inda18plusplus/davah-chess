@@ -4,5 +4,6 @@ Still undertested.
 
 Todo:
 
-* Castling
-* More tests
+* Implement promotion
+* Many more tests
+* Build
