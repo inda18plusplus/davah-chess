@@ -13,13 +13,16 @@ public class EnPassant extends Move {
     this.capturedPawnPosition = capturedPawnPosition;
   }
 
-  public boolean applyTo(Board board) {
+  public void applyTo(Board board) {
     Piece movingPawn = board.atPosition(this.getPosBefore()).getCopy();
     movingPawn.setPosition(this.getPosAfter());
     board.placePiece(movingPawn);
     board.removePiece(this.getPosBefore());
     board.removePiece(this.capturedPawnPosition);
-    return true;
+  }
+
+  public String getIdentifier() {
+    return this.getPosBefore().getNotation() + this.getPosAfter().getNotation();
   }
 
 }

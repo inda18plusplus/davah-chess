@@ -10,14 +10,16 @@ public class Promotion extends Move {
 
   public Promotion(Position posBefore, Position posAfter, Piece promoteTo) {
     super(posBefore, posAfter);
-    this.identifier = posBefore.getNotation() + posAfter.getNotation() + promoteTo.toAsciiSymbol();
     this.promoteTo = promoteTo;
   }
 
-  public boolean applyTo(Board board) {
+  public void applyTo(Board board) {
     board.placePiece(promoteTo);
     board.removePiece(this.getPosBefore());
-    return true;
+  }
+
+  public String getIdentifier() {
+    return this.getPosBefore().getNotation() + this.getPosAfter().getNotation() + promoteTo.toAsciiSymbol();
   }
 
 }
