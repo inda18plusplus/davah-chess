@@ -126,6 +126,28 @@ public class Game {
     return (currentPlayer == Player.BLACK) ? "Black" : "White";
   }
 
+  /**
+   * Displays the current game state in a human-readable format.
+   *
+   * @return The description of the game state.
+   */
+  public String viewState() {
+    switch (state) {
+      case SETUP:
+        return "Setting up the board, can't play yet.";
+      case PLAY:
+        return (currentPlayer == Player.BLACK) ? "Black to play." : "White to play.";
+      case WHITE_WIN:
+        return "White has won!";
+      case BLACK_WIN:
+        return "Black has won!";
+      case DRAW:
+        return "It's a draw!";
+      default:
+        return "An error has occurred.";
+    }
+  }
+
   public ArrayList<Move> getMoves(Player player) {
     return board.getMoves(player, history);
   }
@@ -171,8 +193,24 @@ public class Game {
       move.applyTo(board);
       history.addMove(move);
       currentPlayer = otherPlayer(currentPlayer);
+      checkEndOfGame();
       return true;
     }
     return false;
+  }
+
+  /** Checks if the game has ended, and updates the game state accordingly. */
+  public void checkEndOfGame() {
+    boolean check = board.inCheck(currentPlayer);
+    int numberOfMoves = getMoves(currentPlayer).size();
+    if (numberOfMoves == 0) {
+      if (!check) {
+        state = State.DRAW;
+      } else if (currentPlayer == Player.BLACK) {
+        state = State.WHITE_WIN;
+      } else {
+        state = State.BLACK_WIN;
+      }
+    }
   }
 }

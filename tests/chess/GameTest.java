@@ -53,7 +53,7 @@ class GameTest {
 
 
   @Test
-  void movement() {
+  void movementI() {
     game.setupStandardBoard();
     game.startGame();
     assertFalse(game.makeMove("d2d5"));
@@ -73,6 +73,17 @@ class GameTest {
   }
 
   @Test
+  void movementII() {
+    game.setupStandardBoard();
+    game.startGame();
+    game.makeMove("e2e4");
+    game.makeMove("e7e5");
+    game.makeMove("b1c3");
+    game.makeMove("a7a6");
+    assertTrue(game.makeMove("g1f3"));
+  }
+
+  @Test
   void capture() {
     game.setupStandardBoard();
     game.startGame();
@@ -84,6 +95,17 @@ class GameTest {
             "rnbqkbnr\npppp.ppp\n........\n....P...\n........\n........\nPPP.PPPP\nRNBQKBNR\n",
             game.viewBoard()
     );
+  }
+
+  @Test
+  void foolsMate() {
+    game.setupStandardBoard();
+    game.startGame();
+    game.makeMove("f2f3");
+    game.makeMove("e7e5");
+    game.makeMove("g2g4");
+    game.makeMove("d8h4");
+    assertEquals("Black has won!", game.viewState());
   }
 
 }
