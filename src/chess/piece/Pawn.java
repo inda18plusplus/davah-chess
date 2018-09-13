@@ -2,8 +2,12 @@ package chess.piece;
 
 import chess.Board;
 import chess.Game;
+import chess.History;
 import chess.Position;
 import chess.Step;
+import chess.move.EnPassant;
+import chess.move.Move;
+import chess.move.RegularMove;
 
 import java.util.ArrayList;
 
@@ -73,6 +77,45 @@ public class Pawn extends Piece {
 
   public Piece getCopy() {
     return new Pawn(this.getPosition().getCopy(), this.getPlayer());
+  }
+
+  /**
+   * Overrides Piece's getMoves() adding en passant moves. TODO: Clean up!
+   *
+   * @param board The board the piece is standing on.
+   * @param history The history of that board.
+   * @return A list of all possible moves for the piece.
+   */
+  @Override
+  public ArrayList<Move> getMoves(Board board, History history) {
+    ArrayList<Move> moves = super.getMoves(board, history);
+    Move lastMove = history.getLastMove();
+    if (lastMove == null) {
+      return moves;
+    }
+    Piece lastMovedPiece = board.atPosition(lastMove.getPosAfter());
+    char lookingFor = (this.getPlayer() == Game.Player.WHITE) ? 'p' : 'P';
+    if (lastMovedPiece.toAsciiSymbol() != lookingFor) {
+      return moves;
+    }
+    int rankBeforeLM = lastMove.getPosBefore().getRank();
+    int rankAfterLM = lastMove.getPosAfter().getRank();
+    if (Math.abs(rankAfterLM - rankBeforeLM) != 2) {
+      return moves;
+    }
+    if (lastMovedPiece.getPosition().getRank() != this.getPosition().getRank()) {
+      return moves;
+    }
+    if (Math.abs(lastMovedPiece.getPosition().getFile() - this.getPosition().getFile()) != 1) {
+      return moves;
+    }
+    int forwardRankDiff = (this.getPlayer() == Game.Player.WHITE) ? 1 : -1;
+    int enPassantToRank = lastMovedPiece.getPosition().getRank() + forwardRankDiff;
+    int enPassantToFile = lastMovedPiece.getPosition().getFile();
+    Position enPassantTo = new Position(enPassantToRank, enPassantToFile);
+    Move enPassant = new EnPassant(this.getPosition(), enPassantTo);
+    moves.add(enPassant);
+    return moves;
   }
 
 }
