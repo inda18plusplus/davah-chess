@@ -108,4 +108,34 @@ class GameTest {
     assertEquals("Black has won!", game.viewState());
   }
 
+  @Test
+  void castlingTrue() {
+    game.setupStandardBoard();
+    game.startGame();
+    game.makeMove("g2g3");
+    game.makeMove("b7b6");
+    game.makeMove("f1h3");
+    game.makeMove("e7e6");
+    game.makeMove("g1f3");
+    game.makeMove("d8e7");
+    assertTrue(game.makeMove("0-0"));
+    game.makeMove("c8a6");
+    game.makeMove("a2a3");
+    game.makeMove("b8c6");
+    game.makeMove("a1a2");
+    assertTrue(game.makeMove("0-0-0"));
+    assertEquals(
+            "..kr.bnr\np.ppqppp\nbpn.p...\n........\n........\nP....NPB\nRPPPPP.P\n.NBQ.RK.\n",
+            game.viewBoard()
+    );
+  }
+
 }
+
+
+
+
+
+
+
+

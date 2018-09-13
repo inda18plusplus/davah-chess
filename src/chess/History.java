@@ -25,7 +25,7 @@ public class History {
    * @param position The position to investigate.
    * @return True if the piece has moved, false if the piece hasn't moved or the position is empty.
    */
-  private boolean hasMoved(Position position) {
+  public boolean hasMoved(Position position) {
     for (Move move : moves) {
       if (move.involves(position)) {
         return true;

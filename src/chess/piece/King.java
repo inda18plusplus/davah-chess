@@ -1,11 +1,13 @@
 package chess.piece;
 
-import chess.Board;
-import chess.Game;
-import chess.Position;
-import chess.Step;
+import chess.*;
+import chess.move.Castling;
+import chess.move.Move;
 
 import java.util.ArrayList;
+
+import static chess.Game.FILE_COUNT;
+import static chess.Game.RANK_COUNT;
 
 /** Implements a specific chess piece, the king. */
 public class King extends Piece {
@@ -50,4 +52,58 @@ public class King extends Piece {
     return new King(this.getPosition().getCopy(), this.getPlayer());
   }
 
+  /**
+   * Overrides Piece's getMoves() adding castling.
+   *
+   * @param board The board the piece is standing on.
+   * @param history The history of that board.
+   * @return A list of all possible moves for the piece.
+   */
+  @Override
+  public ArrayList<Move> getMoves(Board board, History history) {
+    ArrayList<Move> moves = super.getMoves(board, history);
+    Game.Player player = this.getPlayer();
+    Position kingPosition = board.findKing(player);
+    int kingRank = kingPosition.getRank();
+    int kingFile = kingPosition.getFile();
+    if (history.hasMoved(kingPosition)) {
+      return moves;
+    }
+    char lookingFor = (player == Game.Player.WHITE) ? 'R' : 'r';
+    for (int i = kingFile - 1; i >= 0; i--) {
+      Position positionAt = new Position(kingRank, i);
+      if (board.isEmpty(positionAt)) {
+        continue;
+      }
+      if (kingFile - i <= 2) {
+        break;
+      }
+      if (board.atPosition(positionAt).toAsciiSymbol() == lookingFor) {
+        Position kingPositionAfter = new Position(kingRank, kingFile - 2);
+        Position rookPositionAfter = new Position(kingRank, kingFile - 1);
+        Move castlingMove =
+            new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter);
+        moves.add(castlingMove);
+      }
+      break;
+    }
+    for (int i = kingPosition.getFile() + 1; i < FILE_COUNT; i++) {
+      Position positionAt = new Position(kingRank, i);
+      if (board.isEmpty(positionAt)) {
+        continue;
+      }
+      if (i - kingFile <= 2) {
+        break;
+      }
+      if (board.atPosition(positionAt).toAsciiSymbol() == lookingFor) {
+        Position kingPositionAfter = new Position(kingRank, kingFile + 2);
+        Position rookPositionAfter = new Position(kingRank, kingFile + 1);
+        Move castlingMove =
+                new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter);
+        moves.add(castlingMove);
+      }
+      break;
+    }
+    return moves;
+  }
 }
