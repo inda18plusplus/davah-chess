@@ -147,14 +147,13 @@ public class Game {
   }
 
   /**
-   * Carries out a move given by the player in a pseudo-algebraic notation.
+   * Carries out a move given by the player in standard algebraic notation.
    *
-   * @param moveNotation See the implementation of Move.createMove() for details.
+   * @param moveNotation Algebraic notation of a move.
    * @return Whether the move was legal and carried out successfully.
    */
   public boolean makeMove(String moveNotation) {
-    // TODO: Real alg.not. requires knowledge of the current player (pawn moves, castling)
-    Move move = Move.createMove(moveNotation, board);
+    Move move = Move.createMove(moveNotation, board, currentPlayer);
     if (move == null) {
       return false;
     }

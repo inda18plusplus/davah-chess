@@ -17,6 +17,7 @@ public abstract class Piece {
 
   /**
    * Constructor for the Piece class.
+   *
    * @param position The position of the piece on the chess board.
    * @param player The controlling player, black or white.
    */
@@ -27,17 +28,24 @@ public abstract class Piece {
 
   /**
    * Abstract method to calculate all positions a piece can reach, except through castling.
+   *
    * @param board The board the piece is standing on.
    * @return A list of all possible moves for the piece.
    */
   public abstract ArrayList<Position> getReach(Board board);
 
+  /**
+   * Abstract method to convert the piece to an ascii character according to type and ownership.
+   *
+   * @return The ascii symbol.
+   */
   public abstract char toAsciiSymbol();
 
   public abstract Piece getCopy();
 
   /**
    * Calculates all possible moves for a piece.
+   *
    * @param board The board the piece is standing on.
    * @param history The history of that board (relevant to castling).
    * @return A list of all possible moves for the piece.
@@ -68,6 +76,13 @@ public abstract class Piece {
     return player;
   }
 
+  /**
+   * Creates a piece based on an ascii identifier. Upper case = white, lower case = black.
+   *
+   * @param position The position of the piece.
+   * @param asciiPiece A character identifying the type and ownership of the piece.
+   * @return The piece.
+   */
   public static Piece createPiece(Position position, char asciiPiece) {
     Game.Player player = Character.isUpperCase(asciiPiece) ? Game.Player.WHITE : Game.Player.BLACK;
     asciiPiece = Character.toLowerCase(asciiPiece);
@@ -88,5 +103,4 @@ public abstract class Piece {
         return null;
     }
   }
-
 }

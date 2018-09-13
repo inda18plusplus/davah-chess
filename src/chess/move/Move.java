@@ -11,7 +11,7 @@ public abstract class Move {
 
   private Position posBefore;
   private Position posAfter;
-  protected String identifier;
+  String identifier;
 
   public Move(Position posBefore, Position posAfter) {
     this.posBefore = posBefore;
@@ -24,14 +24,23 @@ public abstract class Move {
     return this.getIdentifier().equals(otherMove.getIdentifier());
   }
 
-  public static Move createMove(String moveNotation, Board board) { //todo
-    if (moveNotation.matches("[a-h][1-8][a-h][1-8]")) {
+  /**
+   * Parses algebraic notation to create a move, given the board and current player.
+   * @param moveNotation Algebraic notation of a move.
+   * @param board The board the move will be carried out on.
+   * @param player The current player.
+   * @return The move created by the function if successful, otherwise null.
+   */
+  public static Move createMove(String moveNotation, Board board, Game.Player player) {
+    if (moveNotation.matches("[a-h][1-8][a-h][1-8]")) { // TODO: This is cheating, fix
       Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
       Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
       if (board.isEmpty(posBefore)) {
         return null;
       }
-      Game.Player player = board.atPosition(posBefore).getPlayer();
+      if (board.atPosition(posBefore).getPlayer() != player) {
+        return null;
+      }
       if (!board.isPlayer(player, posAfter)) {
         return new RegularMove(posBefore, posAfter);
       }
@@ -45,6 +54,10 @@ public abstract class Move {
 
   public Position getPosAfter() {
     return posAfter;
+  }
+
+  public boolean involves(Position position) {
+    return posBefore.isEqual(position) || posAfter.isEqual(position);
   }
 
   public String getIdentifier() {
