@@ -48,7 +48,7 @@ public class Position {
    * @return Position the name refers to, if valid, otherwise null.
    */
   public static Position createPosition(String positionNotation) {
-    if (positionNotation.matches("[a-f][1-8]")) {
+    if (positionNotation.matches("[a-h][1-8]")) {
       int rank = positionNotation.codePointAt(1) - (int) '1';
       int file = positionNotation.codePointAt(0) - (int) 'a';
       return new Position(rank, file);
