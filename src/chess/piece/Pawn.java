@@ -7,10 +7,12 @@ import chess.Position;
 import chess.Step;
 import chess.move.EnPassant;
 import chess.move.Move;
-import chess.move.RegularMove;
+import chess.move.Promotion;
 
 import java.util.ArrayList;
 
+import static chess.Game.Player.BLACK;
+import static chess.Game.Player.WHITE;
 import static chess.Game.RANK_COUNT;
 
 /** Implements a specific chess piece, the pawn. */
@@ -80,7 +82,7 @@ public class Pawn extends Piece {
   }
 
   /**
-   * Overrides Piece's getMoves() adding en passant moves. TODO: Clean up!
+   * Overrides Piece's getMoves() adding en passant moves.
    *
    * @param board The board the piece is standing on.
    * @param history The history of that board.
@@ -90,6 +92,30 @@ public class Pawn extends Piece {
   public ArrayList<Move> getMoves(Board board, History history) {
     ArrayList<Move> moves = super.getMoves(board, history);
     Move lastMove = history.getLastMove();
+    moves.addAll(this.enPassantMoves(board, lastMove));
+    ArrayList<Move> promotedMoves = new ArrayList<>();
+    int promoteAtRank = (this.getPlayer() == BLACK) ? 0 : RANK_COUNT - 1;
+    for (Move move : moves) {
+      if (move.getPosAfter().getRank() != promoteAtRank) {
+        promotedMoves.add(move);
+        continue;
+      }
+      Position posBefore = move.getPosBefore();
+      Position posAfter = move.getPosAfter();
+      char bishop = (this.getPlayer() == WHITE) ? 'B' : 'b';
+      promotedMoves.add(new Promotion(posBefore, posAfter, bishop));
+      char rook = (this.getPlayer() == WHITE) ? 'R' : 'r';
+      promotedMoves.add(new Promotion(posBefore, posAfter, rook));
+      char knight = (this.getPlayer() == WHITE) ? 'N' : 'n';
+      promotedMoves.add(new Promotion(posBefore, posAfter, knight));
+      char queen = (this.getPlayer() == WHITE) ? 'Q' : 'q';
+      promotedMoves.add(new Promotion(posBefore, posAfter, queen));
+    }
+    return promotedMoves;
+  }
+
+  private ArrayList<Move> enPassantMoves(Board board, Move lastMove) {
+    ArrayList<Move> moves = new ArrayList<>();
     if (lastMove == null) {
       return moves;
     }
@@ -98,9 +124,9 @@ public class Pawn extends Piece {
     if (lastMovedPiece.toAsciiSymbol() != lookingFor) {
       return moves;
     }
-    int rankBeforeLM = lastMove.getPosBefore().getRank();
-    int rankAfterLM = lastMove.getPosAfter().getRank();
-    if (Math.abs(rankAfterLM - rankBeforeLM) != 2) {
+    int rankBeforeLastMove = lastMove.getPosBefore().getRank();
+    int rankAfterLastMove = lastMove.getPosAfter().getRank();
+    if (Math.abs(rankAfterLastMove - rankBeforeLastMove) != 2) {
       return moves;
     }
     if (lastMovedPiece.getPosition().getRank() != this.getPosition().getRank()) {
