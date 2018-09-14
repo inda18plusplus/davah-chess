@@ -130,6 +130,42 @@ class GameTest {
     );
   }
 
+  @Test
+  void enPassantTrue() {
+    game.setupStandardBoard();
+    game.startGame();
+    game.makeMove("d2d4");
+    game.makeMove("a7a6");
+    game.makeMove("d4d5");
+    game.makeMove("e7e5");
+    assertTrue(game.makeMove("d5e6e.p."));
+    assertEquals(
+            "rnbqkbnr\n.ppp.ppp\np...P...\n........\n........\n........\nPPP.PPPP\nRNBQKBNR\n",
+            game.viewBoard()
+    );
+  }
+
+  @Test
+  void promotion() {
+    game.setupStandardBoard();
+    game.startGame();
+    game.makeMove("a2a4");
+    game.makeMove("b7b5");
+    game.makeMove("a4b5");
+    game.makeMove("b8c6");
+    assertFalse(game.makeMove("b5b6Q"));
+    game.makeMove("b5b6");
+    game.makeMove("a7a6");
+    game.makeMove("b6b7");
+    game.makeMove("a6a5");
+    assertFalse(game.makeMove("b7b8q"));
+    assertTrue(game.makeMove("b7b8Q"));
+    assertEquals(
+            "rQbqkbnr\n..pppppp\n..n.....\np.......\n........\n........\n.PPPPPPP\nRNBQKBNR\n",
+            game.viewBoard()
+    );
+  }
+
 }
 
 
