@@ -22,7 +22,7 @@ public class EnPassant extends Move {
   }
 
   public String getIdentifier() {
-    return this.getPosBefore().getNotation() + this.getPosAfter().getNotation();
+    return this.getPosBefore().getNotation() + this.getPosAfter().getNotation() + "e.p.";
   }
 
 }

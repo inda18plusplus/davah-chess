@@ -82,7 +82,7 @@ public class King extends Piece {
         Position kingPositionAfter = new Position(kingRank, kingFile - 2);
         Position rookPositionAfter = new Position(kingRank, kingFile - 1);
         Move castlingMove =
-            new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter);
+                new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter, true);
         moves.add(castlingMove);
       }
       break;
@@ -99,7 +99,7 @@ public class King extends Piece {
         Position kingPositionAfter = new Position(kingRank, kingFile + 2);
         Position rookPositionAfter = new Position(kingRank, kingFile + 1);
         Move castlingMove =
-                new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter);
+                new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter, false);
         moves.add(castlingMove);
       }
       break;

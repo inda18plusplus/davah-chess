@@ -31,26 +31,31 @@ public abstract class Move {
   }
 
   /**
-   * Parses algebraic notation to create a move, given the board and current player.
+   * Parses pseudo-algebraic notation to create a move, given the board and current player.
+   * It does not check that the move is legal.
    *
-   * @param moveNotation Algebraic notation of a move.
+   * @param moveNotation Notation of a move.
    * @param board The board the move will be carried out on.
    * @param player The current player.
    * @return The move created by the function if successful, otherwise null.
    */
   public static Move createMove(String moveNotation, Board board, Game.Player player) {
-    if (moveNotation.matches("[a-h][1-8][a-h][1-8]")) { // TODO: This is cheating, fix
+    if (moveNotation.matches("[a-h][1-8][a-h][1-8]")) {
       Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
       Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
-      if (board.isEmpty(posBefore)) {
-        return null;
-      }
-      if (board.atPosition(posBefore).getPlayer() != player) {
-        return null;
-      }
-      if (!board.isPlayer(player, posAfter)) {
-        return new RegularMove(posBefore, posAfter);
-      }
+      return new RegularMove(posBefore, posAfter);
+    }
+    if (moveNotation.matches("[a-h][1-8][a-h][1-8]e.p.")) {
+      Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
+      Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
+      Position capturePosition = new Position(posBefore.getRank(), posAfter.getFile());
+      return new EnPassant(posBefore, posAfter, capturePosition);
+    }
+    if (moveNotation.matches("[a-h][1-8][a-h][1-8][BbNnQqRr]")) {
+      Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
+      Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
+      char promoteTo = moveNotation.charAt(4);
+      return new Promotion(posBefore, posAfter, promoteTo);
     }
     if (moveNotation.equals("0-0")) {
       int homeRank = (player == Game.Player.WHITE) ? 0 : RANK_COUNT - 1;
@@ -58,7 +63,7 @@ public abstract class Move {
       Position kingPosAfter = new Position(homeRank, 6);
       Position rookPosBefore = new Position(homeRank, 7);
       Position rookPosAfter = new Position(homeRank, 5);
-      return new Castling(kingPosBefore, kingPosAfter, rookPosBefore, rookPosAfter);
+      return new Castling(kingPosBefore, kingPosAfter, rookPosBefore, rookPosAfter, false);
     }
     if (moveNotation.equals("0-0-0")) {
       int homeRank = (player == Game.Player.WHITE) ? 0 : RANK_COUNT - 1;
@@ -66,7 +71,7 @@ public abstract class Move {
       Position kingPosAfter = new Position(homeRank, 2);
       Position rookPosBefore = new Position(homeRank, 0);
       Position rookPosAfter = new Position(homeRank, 3);
-      return new Castling(kingPosBefore, kingPosAfter, rookPosBefore, rookPosAfter);
+      return new Castling(kingPosBefore, kingPosAfter, rookPosBefore, rookPosAfter, true);
     }
     return null;
   }
