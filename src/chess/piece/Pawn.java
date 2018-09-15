@@ -31,6 +31,10 @@ public class Pawn extends Piece {
     super(position, player);
   }
 
+  public char toAsciiSymbol() {
+    return (this.getPlayer() == Game.Player.WHITE) ? 'P' : 'p';
+  }
+
   public ArrayList<Position> getReach(Board board) {
     Game.Player player = this.getPlayer();
     Position posBefore = this.getPosition();
@@ -49,7 +53,7 @@ public class Pawn extends Piece {
             : BLACK_RIGHT.applyOn(posBefore);
 
     ArrayList<Position> reach = new ArrayList<>();
-    if (posForward.insideBoard()) { // Always enters under normal chess rules.
+    if (posForward.insideBoard()) { // Always enters under normal chess rules, due to promotion.
       if (board.isEmpty(posForward)) {
         reach.add(posForward);
         int doubleMoveRank = (player == Game.Player.WHITE) ? 1 : RANK_COUNT - 2;
@@ -73,45 +77,22 @@ public class Pawn extends Piece {
     return reach;
   }
 
-  public char toAsciiSymbol() {
-    return (this.getPlayer() == Game.Player.WHITE) ? 'P' : 'p';
-  }
-
   public Piece getCopy() {
-    return new Pawn(this.getPosition().getCopy(), this.getPlayer());
+    return new Pawn(this.getPosition(), this.getPlayer());
   }
 
   /**
-   * Overrides Piece's getMoves() adding en passant moves.
+   * Overrides Piece's getMoves() adding en passant moves and promotions.
    *
    * @param board The board the piece is standing on.
-   * @param history The history of that board.
    * @return A list of all possible moves for the piece.
    */
   @Override
-  public ArrayList<Move> getMoves(Board board, History history) {
-    ArrayList<Move> moves = super.getMoves(board, history);
-    Move lastMove = history.getLastMove();
+  public ArrayList<Move> getMoves(Board board) {
+    ArrayList<Move> moves = super.getMoves(board);
+    Move lastMove = board.getHistory().getLastMove();
     moves.addAll(this.enPassantMoves(board, lastMove));
-    ArrayList<Move> promotedMoves = new ArrayList<>();
-    int promoteAtRank = (this.getPlayer() == BLACK) ? 0 : RANK_COUNT - 1;
-    for (Move move : moves) {
-      if (move.getPosAfter().getRank() != promoteAtRank) {
-        promotedMoves.add(move);
-        continue;
-      }
-      Position posBefore = move.getPosBefore();
-      Position posAfter = move.getPosAfter();
-      char bishop = (this.getPlayer() == WHITE) ? 'B' : 'b';
-      promotedMoves.add(new Promotion(posBefore, posAfter, bishop));
-      char rook = (this.getPlayer() == WHITE) ? 'R' : 'r';
-      promotedMoves.add(new Promotion(posBefore, posAfter, rook));
-      char knight = (this.getPlayer() == WHITE) ? 'N' : 'n';
-      promotedMoves.add(new Promotion(posBefore, posAfter, knight));
-      char queen = (this.getPlayer() == WHITE) ? 'Q' : 'q';
-      promotedMoves.add(new Promotion(posBefore, posAfter, queen));
-    }
-    return promotedMoves;
+    return this.replaceEligiblePromotions(moves);
   }
 
   private ArrayList<Move> enPassantMoves(Board board, Move lastMove) {
@@ -142,6 +123,28 @@ public class Pawn extends Piece {
     Move enPassant = new EnPassant(this.getPosition(), enPassantTo, lastMovedPiece.getPosition());
     moves.add(enPassant);
     return moves;
+  }
+
+  private ArrayList<Move> replaceEligiblePromotions(ArrayList<Move> moves) {
+    ArrayList<Move> promotedMoves = new ArrayList<>();
+    int promoteAtRank = (this.getPlayer() == BLACK) ? 0 : RANK_COUNT - 1;
+    for (Move move : moves) {
+      if (move.getPosAfter().getRank() != promoteAtRank) {
+        promotedMoves.add(move);
+        continue;
+      }
+      Position posBefore = move.getPosBefore();
+      Position posAfter = move.getPosAfter();
+      char bishop = (this.getPlayer() == WHITE) ? 'B' : 'b';
+      promotedMoves.add(new Promotion(posBefore, posAfter, bishop));
+      char rook = (this.getPlayer() == WHITE) ? 'R' : 'r';
+      promotedMoves.add(new Promotion(posBefore, posAfter, rook));
+      char knight = (this.getPlayer() == WHITE) ? 'N' : 'n';
+      promotedMoves.add(new Promotion(posBefore, posAfter, knight));
+      char queen = (this.getPlayer() == WHITE) ? 'Q' : 'q';
+      promotedMoves.add(new Promotion(posBefore, posAfter, queen));
+    }
+    return promotedMoves;
   }
 
 }

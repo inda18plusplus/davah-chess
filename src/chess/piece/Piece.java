@@ -5,7 +5,6 @@ import chess.Game;
 import chess.History;
 import chess.Position;
 import chess.move.Move;
-import chess.move.RegularMove;
 
 import java.util.ArrayList;
 
@@ -24,57 +23,6 @@ public abstract class Piece {
   public Piece(Position position, Game.Player player) {
     this.position = position;
     this.player = player;
-  }
-
-  /**
-   * Abstract method to calculate all positions a piece can reach, except through castling or en
-   * passant.
-   *
-   * @param board The board the piece is standing on.
-   * @return A list of all possible moves for the piece.
-   */
-  public abstract ArrayList<Position> getReach(Board board);
-
-  /**
-   * Abstract method to convert the piece to an ascii character according to type and ownership.
-   *
-   * @return The ascii symbol.
-   */
-  public abstract char toAsciiSymbol();
-
-  public abstract Piece getCopy();
-
-  /**
-   * Calculates all possible moves for a piece.
-   *
-   * @param board The board the piece is standing on.
-   * @param history The history of that board (relevant to some special moves).
-   * @return A list of all possible moves for the piece.
-   */
-  public ArrayList<Move> getMoves(Board board, History history) {
-    ArrayList<Position> reach = this.getReach(board);
-    ArrayList<Move> moves = new ArrayList<>();
-    for (Position posAfter : reach) {
-      Move move = new RegularMove(this.getPosition(), posAfter);
-      Board boardCopy = board.getCopy();
-      move.applyTo(boardCopy);
-      if (!boardCopy.inCheck(this.getPlayer())) {
-        moves.add(move);
-      }
-    }
-    return moves;
-  }
-
-  public Position getPosition() {
-    return position;
-  }
-
-  public void setPosition(Position position) {
-    this.position = position;
-  }
-
-  public Game.Player getPlayer() {
-    return player;
   }
 
   /**
@@ -103,5 +51,55 @@ public abstract class Piece {
       default:
         return null;
     }
+  }
+
+  public Position getPosition() {
+    return position;
+  }
+
+  public void setPosition(Position position) {
+    this.position = position;
+  }
+
+  public Game.Player getPlayer() {
+    return player;
+  }
+
+  /**
+   * Abstract method to convert the piece to an ascii character according to type and ownership.
+   *
+   * @return The ascii symbol.
+   */
+  public abstract char toAsciiSymbol();
+
+  /**
+   * Abstract method to calculate all positions a piece can reach, except through castling or en
+   * passant. Whether the own king is placed in check is also disregarded.
+   *
+   * @param board The board the piece is standing on.
+   * @return A list of all possible moves for the piece.
+   */
+  public abstract ArrayList<Position> getReach(Board board);
+
+  public abstract Piece getCopy();
+
+  /**
+   * Calculates all possible moves for a piece.
+   *
+   * @param board The board the piece is standing on.
+   * @return A list of all possible moves for the piece.
+   */
+  public ArrayList<Move> getMoves(Board board) {
+    ArrayList<Position> reach = this.getReach(board);
+    ArrayList<Move> moves = new ArrayList<>();
+    for (Position posAfter : reach) {
+      Move move = new Move(this.getPosition(), posAfter);
+      Board boardCopy = board.getCopy();
+      move.applyTo(boardCopy);
+      if (!boardCopy.inCheck(this.getPlayer())) {
+        moves.add(move);
+      }
+    }
+    return moves;
   }
 }

@@ -21,10 +21,14 @@ public class Bishop extends Piece {
     super(position, player);
   }
 
+  public char toAsciiSymbol() {
+    return (this.getPlayer() == Game.Player.WHITE) ? 'B' : 'b';
+  }
+
   public ArrayList<Position> getReach(Board board) {
     ArrayList<Position> reach = new ArrayList<>();
     for (Step step : BISHOP_MOVES) {
-      Position posAfter = this.getPosition().getCopy();
+      Position posAfter = this.getPosition();
       while (step.applyOn(posAfter).insideBoard()) {
         posAfter = step.applyOn(posAfter);
         if (board.isEmpty(posAfter)) {
@@ -40,12 +44,8 @@ public class Bishop extends Piece {
     return reach;
   }
 
-  public char toAsciiSymbol() {
-    return (this.getPlayer() == Game.Player.WHITE) ? 'B' : 'b';
-  }
-
   public Piece getCopy() {
-    return new Bishop(this.getPosition().getCopy(), this.getPlayer());
+    return new Bishop(this.getPosition(), this.getPlayer());
   }
 
 }

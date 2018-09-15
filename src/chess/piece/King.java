@@ -1,13 +1,15 @@
 package chess.piece;
 
-import chess.*;
+import chess.Board;
+import chess.Game;
+import chess.Position;
+import chess.Step;
 import chess.move.Castling;
 import chess.move.Move;
 
 import java.util.ArrayList;
 
 import static chess.Game.FILE_COUNT;
-import static chess.Game.RANK_COUNT;
 
 /** Implements a specific chess piece, the king. */
 public class King extends Piece {
@@ -27,10 +29,14 @@ public class King extends Piece {
     super(position, player);
   }
 
+  public char toAsciiSymbol() {
+    return (this.getPlayer() == Game.Player.WHITE) ? 'K' : 'k';
+  }
+
   public ArrayList<Position> getReach(Board board) {
     ArrayList<Position> reach = new ArrayList<>();
     for (Step step : KING_MOVES) {
-      Position posAfter = this.getPosition().getCopy();
+      Position posAfter = this.getPosition();
       posAfter = step.applyOn(posAfter);
       if (!posAfter.insideBoard()) {
         continue;
@@ -44,29 +50,27 @@ public class King extends Piece {
     return reach;
   }
 
-  public char toAsciiSymbol() {
-    return (this.getPlayer() == Game.Player.WHITE) ? 'K' : 'k';
-  }
-
   public Piece getCopy() {
-    return new King(this.getPosition().getCopy(), this.getPlayer());
+    return new King(this.getPosition(), this.getPlayer());
   }
 
   /**
-   * Overrides Piece's getMoves() adding castling.
+   * Overrides Piece's getMoves() adding castling. TODO: Maybe split into more methods.
    *
    * @param board The board the piece is standing on.
-   * @param history The history of that board.
    * @return A list of all possible moves for the piece.
    */
   @Override
-  public ArrayList<Move> getMoves(Board board, History history) {
-    ArrayList<Move> moves = super.getMoves(board, history);
+  public ArrayList<Move> getMoves(Board board) {
+    ArrayList<Move> moves = super.getMoves(board);
     Game.Player player = this.getPlayer();
+    if (board.inCheck(player)) {
+      return moves;
+    }
     Position kingPosition = board.findKing(player);
     int kingRank = kingPosition.getRank();
     int kingFile = kingPosition.getFile();
-    if (history.hasMoved(kingPosition)) {
+    if (board.getHistory().hasMoved(kingPosition)) {
       return moves;
     }
     char lookingFor = (player == Game.Player.WHITE) ? 'R' : 'r';
@@ -82,7 +86,7 @@ public class King extends Piece {
         Position kingPositionAfter = new Position(kingRank, kingFile - 2);
         Position rookPositionAfter = new Position(kingRank, kingFile - 1);
         Move castlingMove =
-                new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter, true);
+            new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter, true);
         moves.add(castlingMove);
       }
       break;
@@ -99,7 +103,7 @@ public class King extends Piece {
         Position kingPositionAfter = new Position(kingRank, kingFile + 2);
         Position rookPositionAfter = new Position(kingRank, kingFile + 1);
         Move castlingMove =
-                new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter, false);
+            new Castling(kingPosition, kingPositionAfter, positionAt, rookPositionAfter, false);
         moves.add(castlingMove);
       }
       break;

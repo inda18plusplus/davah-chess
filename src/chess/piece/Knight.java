@@ -25,10 +25,14 @@ public class Knight extends Piece {
     super(position, player);
   }
 
+  public char toAsciiSymbol() {
+    return (this.getPlayer() == Game.Player.WHITE) ? 'N' : 'n';
+  }
+
   public ArrayList<Position> getReach(Board board) {
     ArrayList<Position> reach = new ArrayList<>();
     for (Step step : KNIGHT_MOVES) {
-      Position posAfter = this.getPosition().getCopy();
+      Position posAfter = this.getPosition();
       posAfter = step.applyOn(posAfter);
       if (!posAfter.insideBoard()) {
         continue;
@@ -42,12 +46,8 @@ public class Knight extends Piece {
     return reach;
   }
 
-  public char toAsciiSymbol() {
-    return (this.getPlayer() == Game.Player.WHITE) ? 'N' : 'n';
-  }
-
   public Piece getCopy() {
-    return new Knight(this.getPosition().getCopy(), this.getPlayer());
+    return new Knight(this.getPosition(), this.getPlayer());
   }
 
 }

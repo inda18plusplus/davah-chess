@@ -4,6 +4,8 @@ import chess.Board;
 import chess.Position;
 import chess.piece.Piece;
 
+import java.util.ArrayList;
+
 public class Promotion extends Move {
 
   private char promoteTo;
@@ -13,13 +15,18 @@ public class Promotion extends Move {
     this.promoteTo = promoteTo;
   }
 
-  public void applyTo(Board board) {
-    board.placePiece(Piece.createPiece(this.getPosAfter(), promoteTo));
-    board.removePiece(this.getPosBefore());
+  @Override
+  public String getNotation(ArrayList<Move> legalMoves, Board board) {
+    String notation = super.getNotation(legalMoves, board);
+    notation += Character.toUpperCase(promoteTo);
+    return notation;
   }
 
-  public String getIdentifier() {
-    return this.getPosBefore().getNotation() + this.getPosAfter().getNotation() + promoteTo;
+  @Override
+  public void applyTo(Board board) {
+    board.addToHistory(this);
+    board.placePiece(Piece.createPiece(this.getPosAfter(), promoteTo));
+    board.removePiece(this.getPosBefore());
   }
 
 }
