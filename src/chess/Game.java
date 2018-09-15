@@ -87,12 +87,17 @@ public class Game {
    *     the current player.
    */
   public ArrayList<Position> whereCanItMoveTo(Position pieceLocation) {
-    ArrayList<Position> positionsToWhichThePieceAtTheGivenPositionMayLegallyMoveThisTurn =
-            new ArrayList<>();
-    for (Move move : board.atPosition(pieceLocation).getMoves(board)) {
-      positionsToWhichThePieceAtTheGivenPositionMayLegallyMoveThisTurn.add(move.getPosAfter());
+    ArrayList<Position> positions = new ArrayList<>();
+    if (!pieceLocation.insideBoard()) {
+      return positions;
     }
-    return positionsToWhichThePieceAtTheGivenPositionMayLegallyMoveThisTurn;
+    if (!board.isPlayer(currentPlayer, pieceLocation)) {
+      return positions;
+    }
+    for (Move move : board.atPosition(pieceLocation).getMoves(board)) {
+      positions.add(move.getPosAfter());
+    }
+    return positions;
   }
 
   /**

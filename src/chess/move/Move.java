@@ -28,7 +28,7 @@ public class Move {
    */
   public static Move createMove(Position posBefore, Position posAfter, ArrayList<Move> legalMoves) {
     for (Move move : legalMoves) {
-      if (move.getPosBefore() == posBefore && move.getPosAfter() == posAfter) {
+      if (move.getPosBefore().isEqual(posBefore) && move.getPosAfter().isEqual(posAfter)) {
         return move;
       }
     }
