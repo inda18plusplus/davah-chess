@@ -1,6 +1,5 @@
 # davah-chess
 
-Todo:
+Interaction with the game is through `chess.Game`. Moves may be specified through algebraic notation or the `Position` class.
 
-* More tests
-* Build
+There is still much testing to do.
