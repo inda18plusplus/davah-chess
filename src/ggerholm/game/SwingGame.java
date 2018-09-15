@@ -4,6 +4,7 @@ import chess.Game;
 import chess.Game.Player;
 import chess.Position;
 import chess.move.Move;
+import chess.piece.Piece;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -71,28 +72,36 @@ public class SwingGame extends JFrame implements Runnable {
           return;
         }
 
-        if (selected != null) {
-          if (tryForPromotion(selected, pos)) {
-            selected = null;
-            updateBoardView();
-            return;
-          }
-
-          List<Move> possibleMoves = board.getMoves(board.getCurrentPlayer());
-
-          for (Move move : possibleMoves) {
-            if (move.getPosBefore().isEqual(selected) && move.getPosAfter().isEqual(pos)) {
-              if (board.makeMove(move)) {
-                selected = null;
-                updateBoardView();
-                return;
-              }
-            }
-          }
-
+        Piece piece = board.getBoard().atPosition(pos);
+        if (piece != null && piece.getPlayer() == board.getCurrentPlayer()) {
+          selected = pos;
+          return;
         }
 
-        selected = pos;
+        if (selected == null) {
+          return;
+        }
+
+        if (tryForPromotion(selected, pos)) {
+          selected = null;
+          updateBoardView();
+          return;
+        }
+
+        List<Position> possibleMoves = board.whereCanItMoveTo(selected);
+        System.out
+            .println(selected.getRank() + " " + selected.getFile() + " - " + possibleMoves.size());
+
+        if (possibleMoves.stream().noneMatch(m -> m.isEqual(pos))) {
+          selected = null;
+          return;
+        }
+
+        if (board.makeMove(selected, pos)) {
+          updateBoardView();
+        }
+
+        selected = null;
       }
     });
 
@@ -122,14 +131,14 @@ public class SwingGame extends JFrame implements Runnable {
         && !prom.equalsIgnoreCase("r")) {
       prom = JOptionPane.showInputDialog(message);
     }
+    prom = prom.toUpperCase();
 
-    if (Character.isUpperCase(piece)) {
-      prom = prom.toUpperCase();
-    } else {
-      prom = prom.toLowerCase();
-    }
+    ArrayList<Move> legalMoves = board.getBoard().getMoves(board.getCurrentPlayer());
+    String notation = Move.createMove(current, target, legalMoves)
+        .getNotation(legalMoves, board.getBoard());
 
-    return board.makeMove(current.getNotation() + target.getNotation() + prom);
+    notation = notation.substring(0, notation.length() - 1) + prom;
+    return board.makeMove(notation);
   }
 
   private void updateBoardView() {
