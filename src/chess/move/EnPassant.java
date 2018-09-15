@@ -4,6 +4,8 @@ import chess.Board;
 import chess.Position;
 import chess.piece.Piece;
 
+import java.util.ArrayList;
+
 public class EnPassant extends Move {
 
   private Position capturedPawnPosition;
@@ -13,16 +15,30 @@ public class EnPassant extends Move {
     this.capturedPawnPosition = capturedPawnPosition;
   }
 
-  public void applyTo(Board board) {
-    Piece movingPawn = board.atPosition(this.getPosBefore()).getCopy();
-    movingPawn.setPosition(this.getPosAfter());
-    board.placePiece(movingPawn);
-    board.removePiece(this.getPosBefore());
-    board.removePiece(this.capturedPawnPosition);
+  @Override
+  public String getNotation(ArrayList<Move> legalMoves, Board board) {
+    String notation = super.getNotation(legalMoves, board);
+    notation += "e.p.";
+    return notation;
   }
 
-  public String getIdentifier() {
-    return this.getPosBefore().getNotation() + this.getPosAfter().getNotation() + "e.p.";
+  @Override
+  public boolean involves(Position position) {
+    if (position.isEqual(capturedPawnPosition)) {
+      return true;
+    }
+    return super.involves(position);
+  }
+
+  @Override
+  public boolean isCapture(Board board) {
+    return true;
+  }
+
+  @Override
+  public void applyTo(Board board) {
+    super.applyTo(board);
+    board.removePiece(this.capturedPawnPosition);
   }
 
 }

@@ -4,9 +4,12 @@ import chess.Board;
 import chess.Position;
 import chess.piece.Piece;
 
+import java.util.ArrayList;
+
 public class Castling extends Move {
 
-  private RegularMove rookMove;
+  private Position rookPosBefore;
+  private Position rookPosAfter;
   private boolean queenside;
 
   public Castling(
@@ -16,23 +19,34 @@ public class Castling extends Move {
       Position rookPosAfter,
       boolean queenside) {
     super(kingPosBefore, kingPosAfter);
-    rookMove = new RegularMove(rookPosBefore, rookPosAfter);
+    this.rookPosBefore = rookPosBefore;
+    this.rookPosAfter = rookPosAfter;
     this.queenside = queenside;
   }
 
-  public void applyTo(Board board) {
-    Piece movingKing = board.atPosition(this.getPosBefore()).getCopy();
-    movingKing.setPosition(this.getPosAfter());
-    board.placePiece(movingKing);
-    board.removePiece(this.getPosBefore());
-    rookMove.applyTo(board);
-  }
-
-  public String getIdentifier() {
+  @Override
+  public String getNotation(ArrayList<Move> legalMoves, Board board) {
     if (queenside) {
       return "0-0-0";
     } else {
       return "0-0";
     }
+  }
+
+  @Override
+  public boolean involves(Position position) {
+    if (position.isEqual(rookPosBefore) || position.isEqual(rookPosAfter)) {
+      return true;
+    }
+    return super.involves(position);
+  }
+
+  @Override
+  public void applyTo(Board board) {
+    super.applyTo(board);
+    Piece rook = board.atPosition(rookPosBefore).getCopy();
+    rook.setPosition(rookPosAfter);
+    board.placePiece(rook);
+    board.removePiece(rookPosBefore);
   }
 }

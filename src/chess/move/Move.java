@@ -3,11 +3,12 @@ package chess.move;
 import chess.Board;
 import chess.Game;
 import chess.Position;
+import chess.piece.Piece;
 
-import static chess.Game.RANK_COUNT;
+import java.util.ArrayList;
 
 /** Implements a single move in a chess game. */
-public abstract class Move {
+public class Move {
 
   private Position posBefore;
   private Position posAfter;
@@ -18,62 +19,100 @@ public abstract class Move {
   }
 
   /**
-   * Abstract method to execute the move on a Board object, changing it.
+   * Matches a movement given by the user to one of the current player's legal moves and returns it.
    *
-   * @param board The board to execute the move on.
+   * @param posBefore The position the piece moves from.
+   * @param posAfter The position the piece moves to.
+   * @param legalMoves The current player's legal moves.
+   * @return The move if a match was found, otherwise null.
    */
-  public abstract void applyTo(Board board);
-
-  public abstract String getIdentifier();
-
-  public boolean isEqual(Move otherMove) {
-    return this.getIdentifier().equals(otherMove.getIdentifier());
+  public static Move createMove(Position posBefore, Position posAfter, ArrayList<Move> legalMoves) {
+    for (Move move : legalMoves) {
+      if (move.getPosBefore() == posBefore && move.getPosAfter() == posAfter) {
+        return move;
+      }
+    }
+    return null;
   }
 
   /**
-   * Parses pseudo-algebraic notation to create a move, given the board and current player.
-   * It does not check that the move is legal.
+   * Matches a move given in algebraic notation to one of the current player's legal moves and
+   * returns it.
    *
-   * @param moveNotation Notation of a move.
-   * @param board The board the move will be carried out on.
-   * @param player The current player.
-   * @return The move created by the function if successful, otherwise null.
+   * @param moveNotation The algebraic notation of a move.
+   * @param legalMoves The current player's legal moves.
+   * @return The move given by moveNotation if a match was found, otherwise null.
    */
-  public static Move createMove(String moveNotation, Board board, Game.Player player) {
-    if (moveNotation.matches("[a-h][1-8][a-h][1-8]")) {
-      Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
-      Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
-      return new RegularMove(posBefore, posAfter);
-    }
-    if (moveNotation.matches("[a-h][1-8][a-h][1-8]e.p.")) {
-      Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
-      Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
-      Position capturePosition = new Position(posBefore.getRank(), posAfter.getFile());
-      return new EnPassant(posBefore, posAfter, capturePosition);
-    }
-    if (moveNotation.matches("[a-h][1-8][a-h][1-8][BbNnQqRr]")) {
-      Position posBefore = Position.createPosition(moveNotation.substring(0, 2));
-      Position posAfter = Position.createPosition(moveNotation.substring(2, 4));
-      char promoteTo = moveNotation.charAt(4);
-      return new Promotion(posBefore, posAfter, promoteTo);
-    }
-    if (moveNotation.equals("0-0")) {
-      int homeRank = (player == Game.Player.WHITE) ? 0 : RANK_COUNT - 1;
-      Position kingPosBefore = new Position(homeRank, 4);
-      Position kingPosAfter = new Position(homeRank, 6);
-      Position rookPosBefore = new Position(homeRank, 7);
-      Position rookPosAfter = new Position(homeRank, 5);
-      return new Castling(kingPosBefore, kingPosAfter, rookPosBefore, rookPosAfter, false);
-    }
-    if (moveNotation.equals("0-0-0")) {
-      int homeRank = (player == Game.Player.WHITE) ? 0 : RANK_COUNT - 1;
-      Position kingPosBefore = new Position(homeRank, 4);
-      Position kingPosAfter = new Position(homeRank, 2);
-      Position rookPosBefore = new Position(homeRank, 0);
-      Position rookPosAfter = new Position(homeRank, 3);
-      return new Castling(kingPosBefore, kingPosAfter, rookPosBefore, rookPosAfter, true);
+  public static Move createMove(String moveNotation, ArrayList<Move> legalMoves, Board board) {
+    for (Move move : legalMoves) {
+      if (move.getNotation(legalMoves, board).equals(moveNotation)) {
+        return move;
+      }
     }
     return null;
+  }
+
+  /**
+   * Gets the algebraic notation of this move, given the board it is applied to, and that it is a
+   * legal move on that board.
+   * TODO: Maybe split into more methods; this is very long.
+   *
+   * @param legalMoves A list of the other legal moves for the same player on that board.
+   * @param board The board.
+   * @return The move in algebraic notation.
+   */
+  public String getNotation(ArrayList<Move> legalMoves, Board board) {
+    String notation = "";
+    char movingPiece = board.atPosition(this.getPosBefore()).toAsciiSymbol();
+    movingPiece = Character.toUpperCase(movingPiece);
+
+    if (movingPiece != 'P') {
+      notation += movingPiece;
+      boolean sameRank = false;
+      boolean sameFile = false;
+      for (Move move : legalMoves) {
+        boolean samePiece = move.getPosBefore().isEqual(this.getPosBefore());
+        boolean sameDestination = move.getPosAfter().isEqual(this.getPosAfter());
+        if (samePiece && sameDestination) {
+          continue;
+        }
+        boolean samePieceType =
+            (board.atPosition(move.getPosBefore()).toAsciiSymbol() == movingPiece);
+        if (samePieceType && sameDestination) {
+          if (move.getPosBefore().getRank() == this.getPosBefore().getRank()) {
+            sameRank = true;
+          }
+          if (move.getPosBefore().getFile() == this.getPosBefore().getFile()) {
+            sameFile = true;
+          }
+        }
+      }
+      if (sameRank && sameFile) {
+        notation += this.getPosBefore().getNotation();
+      } else if (sameFile) {
+        notation += this.getPosBefore().getNotation().charAt(1);
+      } else if (sameRank) {
+        notation += this.getPosBefore().getNotation().charAt(0);
+      }
+    }
+
+    if (this.isCapture(board)) {
+      if (movingPiece == 'P') {
+        notation += this.getPosBefore().getNotation().charAt(0);
+      }
+      notation += 'x';
+    }
+    notation += this.getPosAfter().getNotation();
+
+    Game.Player currentPlayer = board.atPosition(this.getPosBefore()).getPlayer();
+    Board boardCopy = board.getCopy();
+    this.applyTo(boardCopy);
+    if (boardCopy.inCheckMate(Game.otherPlayer(currentPlayer))) {
+      notation += '#';
+    } else if (boardCopy.inCheck(Game.otherPlayer(currentPlayer))) {
+      notation += '+';
+    }
+    return notation;
   }
 
   public Position getPosBefore() {
@@ -86,5 +125,22 @@ public abstract class Move {
 
   public boolean involves(Position position) {
     return posBefore.isEqual(position) || posAfter.isEqual(position);
+  }
+
+  public boolean isCapture(Board board) {
+    return !board.isEmpty(this.getPosAfter());
+  }
+
+  /**
+   * Abstract method to execute the move on a Board object, changing it.
+   *
+   * @param board The board to execute the move on.
+   */
+  public void applyTo(Board board) {
+    board.addToHistory(this);
+    Piece movingPiece = board.atPosition(this.getPosBefore()).getCopy();
+    movingPiece.setPosition(this.getPosAfter());
+    board.placePiece(movingPiece);
+    board.removePiece(this.getPosBefore());
   }
 }
