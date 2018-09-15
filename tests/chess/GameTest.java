@@ -18,9 +18,8 @@ class GameTest {
   void standardBoard() {
     assertTrue(game.setupStandardBoard());
     assertEquals(
-            "rnbqkbnr\npppppppp\n........\n........\n........\n........\nPPPPPPPP\nRNBQKBNR\n",
-            game.viewBoard()
-    );
+        "rnbqkbnr\npppppppp\n........\n........\n........\n........\nPPPPPPPP\nRNBQKBNR\n",
+        game.viewBoard());
   }
 
   @Test
@@ -34,14 +33,12 @@ class GameTest {
   @Test
   void viewBoard() {
     assertEquals(
-            "........\n........\n........\n........\n........\n........\n........\n........\n",
-            game.viewBoard()
-    );
-    game.placePiece(1, 3, 'P');
+        "........\n........\n........\n........\n........\n........\n........\n........\n",
+        game.viewBoard());
+    game.placePiece(new Position(1, 3), 'P');
     assertEquals(
-            "........\n........\n........\n........\n........\n........\n...P....\n........\n",
-            game.viewBoard()
-    );
+        "........\n........\n........\n........\n........\n........\n...P....\n........\n",
+        game.viewBoard());
   }
 
   @Test
@@ -51,127 +48,45 @@ class GameTest {
     assertEquals(game.viewCurrentPlayer(), "White");
   }
 
-
   @Test
-  void movementI() {
+  void movement() {
     game.setupStandardBoard();
     game.startGame();
-    assertFalse(game.makeMove("d2d5"));
-    assertTrue(game.makeMove("d2d4"));
+    assertFalse(game.makeMove("d5"));
+    assertTrue(game.makeMove("d4"));
     assertEquals(
-            "rnbqkbnr\npppppppp\n........\n........\n...P....\n........\nPPP.PPPP\nRNBQKBNR\n",
-            game.viewBoard()
-    );
+        "rnbqkbnr\npppppppp\n........\n........\n...P....\n........\nPPP.PPPP\nRNBQKBNR\n",
+        game.viewBoard());
     assertSame(Game.Player.BLACK, game.getCurrentPlayer());
-    assertFalse(game.makeMove("e2e4"));
-    assertTrue(game.makeMove("e7e5"));
+    assertFalse(game.makeMove("e4"));
+    assertTrue(game.makeMove("e5"));
     assertEquals(
-            "rnbqkbnr\npppp.ppp\n........\n....p...\n...P....\n........\nPPP.PPPP\nRNBQKBNR\n",
-            game.viewBoard()
-    );
+        "rnbqkbnr\npppp.ppp\n........\n....p...\n...P....\n........\nPPP.PPPP\nRNBQKBNR\n",
+        game.viewBoard());
     assertSame(Game.Player.WHITE, game.getCurrentPlayer());
-  }
-
-  @Test
-  void movementII() {
-    game.setupStandardBoard();
-    game.startGame();
-    game.makeMove("e2e4");
-    game.makeMove("e7e5");
-    game.makeMove("b1c3");
-    game.makeMove("a7a6");
-    assertTrue(game.makeMove("g1f3"));
   }
 
   @Test
   void capture() {
     game.setupStandardBoard();
     game.startGame();
-    game.makeMove("d2d4");
-    game.makeMove("e7e5");
+    game.makeMove("d4");
+    game.makeMove("e5");
 
-    assertTrue(game.makeMove("d4e5"));
+    assertTrue(game.makeMove("dxe5"));
     assertEquals(
-            "rnbqkbnr\npppp.ppp\n........\n....P...\n........\n........\nPPP.PPPP\nRNBQKBNR\n",
-            game.viewBoard()
-    );
+        "rnbqkbnr\npppp.ppp\n........\n....P...\n........\n........\nPPP.PPPP\nRNBQKBNR\n",
+        game.viewBoard());
   }
 
   @Test
   void foolsMate() {
     game.setupStandardBoard();
     game.startGame();
-    game.makeMove("f2f3");
-    game.makeMove("e7e5");
-    game.makeMove("g2g4");
-    game.makeMove("d8h4");
-    assertEquals("Black has won!", game.viewState());
+    game.makeMove("f3");
+    game.makeMove("e5");
+    game.makeMove("g4");
+    game.makeMove("Qh4#");
+    assertEquals(Game.State.BLACK_WIN, game.getState());
   }
-
-  @Test
-  void castlingTrue() {
-    game.setupStandardBoard();
-    game.startGame();
-    game.makeMove("g2g3");
-    game.makeMove("b7b6");
-    game.makeMove("f1h3");
-    game.makeMove("e7e6");
-    game.makeMove("g1f3");
-    game.makeMove("d8e7");
-    assertTrue(game.makeMove("0-0"));
-    game.makeMove("c8a6");
-    game.makeMove("a2a3");
-    game.makeMove("b8c6");
-    game.makeMove("a1a2");
-    assertTrue(game.makeMove("0-0-0"));
-    assertEquals(
-            "..kr.bnr\np.ppqppp\nbpn.p...\n........\n........\nP....NPB\nRPPPPP.P\n.NBQ.RK.\n",
-            game.viewBoard()
-    );
-  }
-
-  @Test
-  void enPassantTrue() {
-    game.setupStandardBoard();
-    game.startGame();
-    game.makeMove("d2d4");
-    game.makeMove("a7a6");
-    game.makeMove("d4d5");
-    game.makeMove("e7e5");
-    assertTrue(game.makeMove("d5e6e.p."));
-    assertEquals(
-            "rnbqkbnr\n.ppp.ppp\np...P...\n........\n........\n........\nPPP.PPPP\nRNBQKBNR\n",
-            game.viewBoard()
-    );
-  }
-
-  @Test
-  void promotion() {
-    game.setupStandardBoard();
-    game.startGame();
-    game.makeMove("a2a4");
-    game.makeMove("b7b5");
-    game.makeMove("a4b5");
-    game.makeMove("b8c6");
-    assertFalse(game.makeMove("b5b6Q"));
-    game.makeMove("b5b6");
-    game.makeMove("a7a6");
-    game.makeMove("b6b7");
-    game.makeMove("a6a5");
-    assertFalse(game.makeMove("b7b8q"));
-    assertTrue(game.makeMove("b7b8Q"));
-    assertEquals(
-            "rQbqkbnr\n..pppppp\n..n.....\np.......\n........\n........\n.PPPPPPP\nRNBQKBNR\n",
-            game.viewBoard()
-    );
-  }
-
 }
-
-
-
-
-
-
-
-

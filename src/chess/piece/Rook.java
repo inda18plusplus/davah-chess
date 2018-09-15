@@ -21,10 +21,14 @@ public class Rook extends Piece {
     super(position, player);
   }
 
+  public char toAsciiSymbol() {
+    return (this.getPlayer() == Game.Player.WHITE) ? 'R' : 'r';
+  }
+
   public ArrayList<Position> getReach(Board board) {
     ArrayList<Position> reach = new ArrayList<>();
     for (Step step : ROOK_MOVES) {
-      Position posAfter = this.getPosition().getCopy();
+      Position posAfter = this.getPosition();
       while (step.applyOn(posAfter).insideBoard()) {
         posAfter = step.applyOn(posAfter);
         if (board.isEmpty(posAfter)) {
@@ -40,12 +44,8 @@ public class Rook extends Piece {
     return reach;
   }
 
-  public char toAsciiSymbol() {
-    return (this.getPlayer() == Game.Player.WHITE) ? 'R' : 'r';
-  }
-
   public Piece getCopy() {
-    return new Rook(this.getPosition().getCopy(), this.getPlayer());
+    return new Rook(this.getPosition(), this.getPlayer());
   }
 
 }

@@ -14,47 +14,12 @@ public class Position {
     this.file = file;
   }
 
-  /**
-   * Calculates whether this position is inside the chess board.
-   *
-   * @return Whether this position is inside the chess board.
-   */
-  public boolean insideBoard() {
-    boolean rankInsideBoard = 0 <= rank && rank < RANK_COUNT;
-    boolean fileInsideBoard = 0 <= file && file < FILE_COUNT;
-    return rankInsideBoard && fileInsideBoard;
-  }
-
   public int getRank() {
     return rank;
   }
 
   public int getFile() {
     return file;
-  }
-
-  public boolean isEqual(Position otherPosition) {
-    return otherPosition.rank == rank && otherPosition.file == file;
-  }
-
-  public Position getCopy() {
-    return new Position(rank, file);
-  }
-
-  /**
-   * Parses the usual name for a square on the chess board.
-   *
-   * @param positionNotation Name of the square.
-   * @return Position the name refers to, if valid, otherwise null.
-   */
-  public static Position createPosition(String positionNotation) {
-    if (positionNotation.matches("[a-h][1-8]")) {
-      int rank = positionNotation.codePointAt(1) - (int) '1';
-      int file = positionNotation.codePointAt(0) - (int) 'a';
-      return new Position(rank, file);
-    } else {
-      return null;
-    }
   }
 
   /**
@@ -66,5 +31,20 @@ public class Position {
     char fileNotation = (char) (file + (int) 'a');
     char rankNotation = (char) (rank + (int) '1');
     return "" + fileNotation + rankNotation;
+  }
+
+  /**
+   * Calculates whether this position is inside the chess board.
+   *
+   * @return Whether this position is inside the chess board.
+   */
+  public boolean insideBoard() {
+    boolean rankInsideBoard = 0 <= rank && rank < RANK_COUNT;
+    boolean fileInsideBoard = 0 <= file && file < FILE_COUNT;
+    return rankInsideBoard && fileInsideBoard;
+  }
+
+  public boolean isEqual(Position otherPosition) {
+    return otherPosition.rank == rank && otherPosition.file == file;
   }
 }

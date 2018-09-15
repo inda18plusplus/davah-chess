@@ -41,17 +41,4 @@ class PositionTest {
     assertTrue(position.isEqual(compare));
   }
 
-  @Test
-  void getCopy() {
-    Position position = new Position(2, 3);
-    Position compare = position.getCopy();
-    assertTrue(position.isEqual(compare));
-  }
-
-  @Test
-  void createPosition() {
-    Position position = Position.createPosition("d2");
-    Position compare = new Position(1, 3);
-    assertTrue(position.isEqual(compare));
-  }
 }

@@ -4,19 +4,29 @@ import chess.move.Move;
 
 import java.util.ArrayList;
 
-/** Implements the history of a chess board. */
+/**
+ * Implements the history of a chess board.
+ * TODO: Counting pawn moves
+ * TODO: Three-time repetition rule
+ */
 public class History {
 
   private ArrayList<Move> moves;
-  private int movesWithoutPawnMove;
 
   public History() {
     this.moves = new ArrayList<>();
-    this.movesWithoutPawnMove = 0;
   }
 
-  public void addMove(Move move) {
-    moves.add(move);
+  /**
+   * Returns the last executed move.
+   *
+   * @return That move.
+   */
+  public Move getLastMove() {
+    if (moves.isEmpty()) {
+      return null;
+    }
+    return moves.get(moves.size() - 1);
   }
 
   /**
@@ -34,19 +44,21 @@ public class History {
     return false;
   }
 
-  /**
-   * Returns the last executed move.
-   *
-   * @return That move.
-   */
-  public Move getLastMove() {
-    if (moves.isEmpty()) {
-      return null;
-    }
-    return moves.get(moves.size() - 1);
+  public void addMove(Move move) {
+    moves.add(move);
   }
 
-  public int getMovesWithoutPawnMove() {
-    return movesWithoutPawnMove;
+  /**
+   * Constructs a shallow copy of this.
+   *
+   * @return The copy.
+   */
+  public History getCopy() {
+    History copy = new History();
+    for (Move move : moves) {
+      copy.addMove(move);
+    }
+    return copy;
   }
+
 }
