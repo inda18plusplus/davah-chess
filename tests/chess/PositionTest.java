@@ -41,4 +41,12 @@ class PositionTest {
     assertTrue(position.isEqual(compare));
   }
 
+  @Test
+  void positionNotation() {
+    Position position = new Position("f3");
+    Position compare = new Position(2, 5);
+    assertTrue(position.isEqual(compare));
+    assertEquals("f3", compare.getNotation());
+  }
+
 }

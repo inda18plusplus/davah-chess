@@ -14,6 +14,21 @@ public class Position {
     this.file = file;
   }
 
+  /**
+   * Creates a position object from its usual name.
+   *
+   * @param notation The name.
+   */
+  public Position(String notation) {
+    if (notation.matches("[a-h][1-8]")) {
+      this.rank = notation.charAt(1) - '1';
+      this.file = notation.charAt(0) - 'a';
+    } else {
+      this.rank = 0;
+      this.file = 0;
+    }
+  }
+
   public int getRank() {
     return rank;
   }
