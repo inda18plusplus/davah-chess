@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Objects;
-import javafx.geometry.Pos;
 import static chess.Game.FILE_COUNT;
 import static chess.Game.RANK_COUNT;
 

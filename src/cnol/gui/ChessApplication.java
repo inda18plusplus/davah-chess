@@ -16,7 +16,7 @@ public class ChessApplication extends Application {
     launch(args);
   }
 
-  @Override public void start(Stage stage) throws Exception {
+  @Override public void start(Stage stage) {
     stage.setTitle("Chess");
 
     Button button = new Button();

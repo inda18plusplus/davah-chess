@@ -1,6 +1,5 @@
 package cnol.gui;
 
-
 import chess.Game;
 import chess.Position;
 import java.util.HashMap;
@@ -12,7 +11,6 @@ import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,24 +49,18 @@ public class ChessBoard extends HBox {
 
   ChessBoard() {
     this.game = new Game();
-
-    this.game.placePiece(new Position(6, 2), 'P');
-    this.game.placePiece(new Position(1, 5), 'p');
-    this.game.placePiece(new Position(6, 6), 'K');
-    this.game.placePiece(new Position(1, 7), 'k');
-    // this.game.setupStandardBoard();
-
+    this.game.setupStandardBoard();
     this.game.startGame();
 
     this.createGrid();
     this.updatePieces();
 
-    VBox vBox = new VBox();
+    VBox verticalBox = new VBox();
 
-    vBox.getChildren().add(grid);
-    vBox.setAlignment(Pos.CENTER);
+    verticalBox.getChildren().add(grid);
+    verticalBox.setAlignment(Pos.CENTER);
 
-    this.getChildren().add(vBox);
+    this.getChildren().add(verticalBox);
     this.setAlignment(Pos.CENTER);
 
 
@@ -155,7 +147,7 @@ public class ChessBoard extends HBox {
     Tile tile = this.getTile(checkTile.getFile(), checkTile.getRank());
 
     if (tile != null) {
-      tile.showMarker(color);
+      tile.highlight(color);
     }
   }
 
@@ -163,7 +155,7 @@ public class ChessBoard extends HBox {
     for (Node node : this.grid.getChildren()) {
       if (node instanceof Tile) {
         Tile tile = (Tile) node;
-        tile.showMarker(null);
+        tile.highlight(null);
       }
     }
   }
@@ -175,7 +167,7 @@ public class ChessBoard extends HBox {
       Tile tile = this.getTile(pos.getFile(), pos.getRank());
 
       if (tile != null) {
-        tile.showMarker(Color.GREEN);
+        tile.highlight(Color.GREEN);
       }
     }
   }
@@ -237,9 +229,9 @@ public class ChessBoard extends HBox {
     // Add tiles
     for (int i = 0; i < Game.RANK_COUNT; i++) {
       for (int j = 0; j < Game.FILE_COUNT; j++) {
-        Tile tile = new Tile((i + j) % 2 == 0 ? Color.BEIGE : Color.DARKORANGE, tileSize);
+        Tile tile = new Tile((i + j) % 2 == 1 ? Color.BEIGE : Color.DARKORANGE, tileSize);
 
-        grid.add(tile, j, Game.RANK_COUNT - i -1);
+        grid.add(tile, j, Game.RANK_COUNT - i - 1);
       }
     }
   }

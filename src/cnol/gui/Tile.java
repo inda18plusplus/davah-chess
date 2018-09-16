@@ -1,16 +1,11 @@
 package cnol.gui;
 
-
 import javafx.beans.binding.NumberBinding;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class Tile extends StackPane {
   NumberBinding size;
@@ -29,6 +24,10 @@ public class Tile extends StackPane {
     super.setBackground(new Background(new BackgroundFill(color, null, null)));
   }
 
+  /**
+   * Sets the image to display on top of the tile.
+   * @param image The image.
+   */
   public void setImage(ImageView image) {
     this.getChildren().removeIf(node -> node instanceof ImageView);
 
@@ -43,7 +42,12 @@ public class Tile extends StackPane {
     }
   }
 
-  public void showMarker(Color markerColor) {
+
+  /**
+   * Highlights this piece with a given color.
+   * @param markerColor The color to use for the highlight.
+   */
+  public void highlight(Color markerColor) {
     if (markerColor != null) {
       Color newColor = this.color.interpolate(markerColor, 0.75);
       this.setBackgroundColor(newColor);
