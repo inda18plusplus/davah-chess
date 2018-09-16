@@ -51,5 +51,4 @@ public class Queen extends Piece {
   public Piece getCopy() {
     return new Queen(this.getPosition(), this.getPlayer());
   }
-
 }
