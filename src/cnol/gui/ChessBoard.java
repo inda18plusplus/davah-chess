@@ -61,8 +61,9 @@ public class ChessBoard extends HBox {
     this.getChildren().add(vBox);
     this.setAlignment(Pos.CENTER);
 
+
     grid.setOnMousePressed(mouseEvent -> {
-      moveStart = this.boardToTile(mouseEvent.getX(), mouseEvent.getY());
+      this.moveStart = this.boardToTile(mouseEvent.getX(), mouseEvent.getY());
 
       this.revealAvailableMoves(moveStart);
     });
@@ -71,7 +72,7 @@ public class ChessBoard extends HBox {
     grid.setOnMouseReleased(mouseEvent -> {
       Position point = this.boardToTile(mouseEvent.getX(), mouseEvent.getY());
 
-      this.game.makeMove(this.moveStart, point);
+      this.game.makeMove(this.moveStart, point, 'q');
       this.moveStart = null;
 
       this.removeAllMarkers();

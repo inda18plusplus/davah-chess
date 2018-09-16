@@ -2,6 +2,7 @@ package cnol.gui;
 
 
 import javafx.beans.binding.NumberBinding;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -23,7 +24,6 @@ public class Tile extends StackPane {
 
     this.color = color;
   }
-
 
   private void setBackgroundColor(Color color) {
     super.setBackground(new Background(new BackgroundFill(color, null, null)));
