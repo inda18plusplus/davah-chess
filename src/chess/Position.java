@@ -62,4 +62,8 @@ public class Position {
   public boolean isEqual(Position otherPosition) {
     return otherPosition.rank == rank && otherPosition.file == file;
   }
+
+  @Override public String toString() {
+    return "[" + this.file + ", " + this.rank + "]";
+  }
 }
