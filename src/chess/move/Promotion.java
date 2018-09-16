@@ -23,6 +23,16 @@ public class Promotion extends Move {
   }
 
   @Override
+  public boolean isPromotion() {
+    return true;
+  }
+
+  @Override
+  public Character promoteToWhat() {
+    return promoteTo;
+  }
+
+  @Override
   public void applyTo(Board board) {
     board.addToHistory(this);
     board.placePiece(Piece.createPiece(this.getPosAfter(), promoteTo));

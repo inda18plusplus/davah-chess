@@ -3,6 +3,7 @@ package chess;
 import chess.move.Move;
 import chess.piece.Piece;
 
+
 import java.util.ArrayList;
 
 /** Implements a single chess game. TODO: Method to calculate where a piece can move */
@@ -187,7 +188,7 @@ public class Game {
   }
 
   /**
-   * Validated and executes a move given by the user.
+   * Validated and executes a move given by the user. The move cannot be a promotion.
    *
    * @param posBefore The position to move from.
    * @param posAfter The position to move to.
@@ -195,6 +196,23 @@ public class Game {
    */
   public boolean makeMove(Position posBefore, Position posAfter) {
     Move move = Move.createMove(posBefore, posAfter, board.getMoves(currentPlayer));
+    if (move == null) {
+      return false;
+    }
+    performMove(move);
+    return true;
+  }
+
+  /**
+   * Validated and executes a move given by the user. The move must be a promotion.
+   *
+   * @param posBefore The position to move from.
+   * @param posAfter The position to move to.
+   * @param promoteTo The ascii identifier of the piece to promote to.
+   * @return Whether the move was legal and carried out properly.
+   */
+  public boolean makeMove(Position posBefore, Position posAfter, char promoteTo) {
+    Move move = Move.createMove(posBefore, posAfter, promoteTo, board.getMoves(currentPlayer));
     if (move == null) {
       return false;
     }

@@ -19,23 +19,6 @@ public class Move {
   }
 
   /**
-   * Matches a movement given by the user to one of the current player's legal moves and returns it.
-   *
-   * @param posBefore The position the piece moves from.
-   * @param posAfter The position the piece moves to.
-   * @param legalMoves The current player's legal moves.
-   * @return The move if a match was found, otherwise null.
-   */
-  public static Move createMove(Position posBefore, Position posAfter, ArrayList<Move> legalMoves) {
-    for (Move move : legalMoves) {
-      if (move.getPosBefore().isEqual(posBefore) && move.getPosAfter().isEqual(posAfter)) {
-        return move;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Matches a move given in algebraic notation to one of the current player's legal moves and
    * returns it.
    *
@@ -53,9 +36,54 @@ public class Move {
   }
 
   /**
+   * Matches a movement given by the user to one of the current player's legal moves and returns it.
+   * Promotions are handled separately.
+   *
+   * @param posBefore The position the piece moves from.
+   * @param posAfter The position the piece moves to.
+   * @param legalMoves The current player's legal moves.
+   * @return The move if a match was found, otherwise null.
+   */
+  public static Move createMove(Position posBefore, Position posAfter, ArrayList<Move> legalMoves) {
+    for (Move move : legalMoves) {
+      if (move instanceof Promotion) {
+        continue;
+      }
+      if (move.getPosBefore().isEqual(posBefore) && move.getPosAfter().isEqual(posAfter)) {
+        return move;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Matches a movement given by the user to one of the current player's legal moves and returns it.
+   * This method only handles promotions.
+   *
+   * @param posBefore The position the piece moves from.
+   * @param posAfter The position the piece moves to.
+   * @param promoteTo The piece to promote to.
+   * @param legalMoves The current player's legal moves.
+   * @return The move if a match was found, otherwise null.
+   */
+  public static Move createMove(
+      Position posBefore, Position posAfter, char promoteTo, ArrayList<Move> legalMoves) {
+    for (Move move : legalMoves) {
+      if (move.isPromotion()) {
+        char otherPromotion = move.promoteToWhat();
+        if (move.getPosBefore().isEqual(posBefore)
+            && move.getPosAfter().isEqual(posAfter)
+            && Character.toUpperCase(otherPromotion) == Character.toUpperCase(promoteTo)) {
+          return move;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * Gets the algebraic notation of this move, given the board it is applied to, and that it is a
-   * legal move on that board.
-   * TODO: Maybe split into more methods; this is very long.
+   * legal move on that board. TODO: Maybe split into more methods; this is very long.
    *
    * @param legalMoves A list of the other legal moves for the same player on that board.
    * @param board The board.
@@ -129,6 +157,14 @@ public class Move {
 
   public boolean isCapture(Board board) {
     return !board.isEmpty(this.getPosAfter());
+  }
+
+  public boolean isPromotion() {
+    return false;
+  }
+
+  public Character promoteToWhat() {
+    return null;
   }
 
   /**

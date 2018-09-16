@@ -2,7 +2,6 @@ package chess.piece;
 
 import chess.Board;
 import chess.Game;
-import chess.History;
 import chess.Position;
 import chess.move.Move;
 

@@ -2,7 +2,6 @@ package chess.move;
 
 import chess.Board;
 import chess.Position;
-import chess.piece.Piece;
 
 import java.util.ArrayList;
 
