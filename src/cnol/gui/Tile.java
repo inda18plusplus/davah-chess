@@ -45,7 +45,7 @@ public class Tile extends StackPane {
 
   public void showMarker(Color markerColor) {
     if (markerColor != null) {
-      Color newColor = this.color.interpolate(markerColor, 0.5);
+      Color newColor = this.color.interpolate(markerColor, 0.75);
       this.setBackgroundColor(newColor);
     } else {
       this.setBackgroundColor(this.color);

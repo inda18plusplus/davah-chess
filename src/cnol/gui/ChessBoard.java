@@ -6,10 +6,14 @@ import chess.Position;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -47,7 +51,13 @@ public class ChessBoard extends HBox {
 
   ChessBoard() {
     this.game = new Game();
-    this.game.setupStandardBoard();
+
+    this.game.placePiece(new Position(6, 2), 'P');
+    this.game.placePiece(new Position(1, 5), 'p');
+    this.game.placePiece(new Position(6, 6), 'K');
+    this.game.placePiece(new Position(1, 7), 'k');
+    // this.game.setupStandardBoard();
+
     this.game.startGame();
 
     this.createGrid();
@@ -72,7 +82,16 @@ public class ChessBoard extends HBox {
     grid.setOnMouseReleased(mouseEvent -> {
       Position point = this.boardToTile(mouseEvent.getX(), mouseEvent.getY());
 
-      this.game.makeMove(this.moveStart, point, 'q');
+      List<Position> available = this.game.whereCanItMoveTo(this.moveStart);
+
+      if (available.contains(point)) {
+        if (!this.game.makeMove(this.moveStart, point)) {
+          // Has to promote
+          char promotion = this.queryPromotion();
+          this.game.makeMove(this.moveStart, point, promotion);
+        }
+      }
+
       this.moveStart = null;
 
       this.removeAllMarkers();
@@ -80,6 +99,36 @@ public class ChessBoard extends HBox {
       this.updatePieces();
       this.updateGameStatus();
     });
+  }
+
+  private char queryPromotion() {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Choose a promotion");
+    alert.setHeaderText(null);
+    alert.setGraphic(null);
+
+    alert.getButtonTypes().clear();
+
+    ButtonType queen = new ButtonType("Queen");
+    ButtonType knight = new ButtonType("Knight");
+    ButtonType rook = new ButtonType("Rook");
+    ButtonType bishop = new ButtonType("Bishop");
+
+    alert.getButtonTypes().addAll(queen, knight, rook, bishop);
+
+    Optional<ButtonType> result = alert.showAndWait();
+
+    if (result.get() == queen) {
+      return 'q';
+    } else if (result.get() == knight) {
+      return 'n';
+    } else if (result.get() == rook) {
+      return 'r';
+    } else if (result.get() == bishop) {
+      return 'b';
+    }
+
+    return 'q';
   }
 
   private void updateGameStatus() {
