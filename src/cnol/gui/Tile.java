@@ -1,58 +1,64 @@
 package cnol.gui;
 
-import javafx.beans.binding.NumberBinding;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 public class Tile extends StackPane {
-  NumberBinding size;
-  Color color;
+  private Color baseColor;
+  private Color currentColor;
+  private Image image;
 
-  Tile(Color color, NumberBinding size) {
-    this.setBackgroundColor(color);
-    this.size = size;
-    this.prefWidthProperty().bind(size);
-    this.prefHeightProperty().bind(size);
+  Tile(Color baseColor) {
+    this.baseColor = baseColor;
+    this.currentColor = baseColor;
 
-    this.color = color;
-  }
-
-  private void setBackgroundColor(Color color) {
-    super.setBackground(new Background(new BackgroundFill(color, null, null)));
+    this.updateBackground();
   }
 
   /**
    * Sets the image to display on top of the tile.
+   *
    * @param image The image.
    */
-  public void setImage(ImageView image) {
-    this.getChildren().removeIf(node -> node instanceof ImageView);
+  public void setImage(Image image) {
+    this.image = image;
+    this.updateBackground();
+  }
 
-    if (image != null) {
-      image.fitWidthProperty().bind(this.size.multiply(0.9));
-      image.fitHeightProperty().bind(this.size.multiply(0.9));
+  private void updateBackground() {
+    BackgroundFill[] fills = {new BackgroundFill(this.currentColor, null, null)};
 
-      image.minWidth(0.0);
-      image.minHeight(0.0);
+    if (this.image != null) {
+      BackgroundImage[] images = {new BackgroundImage(image, null, null, null,
+          new BackgroundSize(80, 80, true, true, true, false))};
 
-      this.getChildren().add(image);
+      this.setBackground(new Background(
+          fills, images
+      ));
+    } else {
+      this.setBackground(new Background(fills));
     }
   }
 
 
   /**
-   * Highlights this piece with a given color.
-   * @param markerColor The color to use for the highlight.
+   * Highlights this piece with a given baseColor.
+   *
+   * @param markerColor The baseColor to use for the highlight.
    */
   public void highlight(Color markerColor) {
     if (markerColor != null) {
-      Color newColor = this.color.interpolate(markerColor, 0.75);
-      this.setBackgroundColor(newColor);
+      this.currentColor = this.baseColor.interpolate(markerColor, 0.75);
     } else {
-      this.setBackgroundColor(this.color);
+      this.currentColor = this.baseColor;
     }
+
+    this.updateBackground();
   }
 }
+

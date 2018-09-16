@@ -13,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -197,7 +196,7 @@ public class ChessBoard extends HBox {
 
     if (tile != null) {
       if (image != null) {
-        tile.setImage(new ImageView(image));
+        tile.setImage(image);
       } else {
         tile.setImage(null);
       }
@@ -229,7 +228,7 @@ public class ChessBoard extends HBox {
     // Add tiles
     for (int i = 0; i < Game.RANK_COUNT; i++) {
       for (int j = 0; j < Game.FILE_COUNT; j++) {
-        Tile tile = new Tile((i + j) % 2 == 1 ? Color.BEIGE : Color.DARKORANGE, tileSize);
+        Tile tile = new Tile((i + j) % 2 == 1 ? Color.BEIGE : Color.DARKORANGE);
 
         grid.add(tile, j, Game.RANK_COUNT - i - 1);
       }

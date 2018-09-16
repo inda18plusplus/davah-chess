@@ -27,6 +27,9 @@ class ChessScene extends Scene {
     this.stage = stage;
     this.createChessBoard();
 
+    stage.setMinWidth(200.0);
+    stage.setMinHeight(200.0);
+
     this.root.setStyle("-fx-background-color: #34495e");
 
     this.addTopBar();
