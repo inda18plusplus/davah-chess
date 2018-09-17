@@ -6,8 +6,6 @@ public class Main {
 
   /**
    * Plays a chess game using the command line.
-   *
-   * @param args Not used.
    */
   public static void main(String[] args) {
     Game game = new Game();

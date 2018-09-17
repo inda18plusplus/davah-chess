@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.Objects;
 import static chess.Game.FILE_COUNT;
 import static chess.Game.RANK_COUNT;
 
@@ -61,5 +62,23 @@ public class Position {
 
   public boolean isEqual(Position otherPosition) {
     return otherPosition.rank == rank && otherPosition.file == file;
+  }
+
+  @Override public int hashCode() {
+    return Objects.hash(this.file, this.rank);
+  }
+
+  @Override public boolean equals(Object o) {
+    if (o instanceof Position) {
+      Position p = (Position) o;
+
+      return p.isEqual(this);
+    }
+
+    return false;
+  }
+
+  @Override public String toString() {
+    return "[" + this.file + ", " + this.rank + "]";
   }
 }
