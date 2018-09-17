@@ -6,10 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import chess.piece.Piece;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -32,21 +38,21 @@ public class ChessBoard extends HBox {
   static {
     pieceImages = new HashMap<>();
 
-    pieceImages.put('p', new Image("BlackPawn.png"));
-    pieceImages.put('n', new Image("BlackKnight.png"));
-    pieceImages.put('b', new Image("BlackBishop.png"));
-    pieceImages.put('r', new Image("BlackRook.png"));
-    pieceImages.put('q', new Image("BlackQueen.png"));
-    pieceImages.put('k', new Image("BlackKing.png"));
-    pieceImages.put('P', new Image("WhitePawn.png"));
-    pieceImages.put('N', new Image("WhiteKnight.png"));
-    pieceImages.put('B', new Image("WhiteBishop.png"));
-    pieceImages.put('R', new Image("WhiteRook.png"));
-    pieceImages.put('Q', new Image("WhiteQueen.png"));
-    pieceImages.put('K', new Image("WhiteKing.png"));
+    pieceImages.put('p', new Image("images/blackPawn.png"));
+    pieceImages.put('n', new Image("images/blackKnight.png"));
+    pieceImages.put('b', new Image("images/blackBishop.png"));
+    pieceImages.put('r', new Image("images/blackRook.png"));
+    pieceImages.put('q', new Image("images/blackQueen.png"));
+    pieceImages.put('k', new Image("images/blackKing.png"));
+    pieceImages.put('P', new Image("images/whitePawn.png"));
+    pieceImages.put('N', new Image("images/whiteKnight.png"));
+    pieceImages.put('B', new Image("images/whiteBishop.png"));
+    pieceImages.put('R', new Image("images/whiteRook.png"));
+    pieceImages.put('Q', new Image("images/whiteQueen.png"));
+    pieceImages.put('K', new Image("images/whiteKing.png"));
   }
 
-  ChessBoard() {
+  ChessBoard(Scene scene) {
     this.game = new Game();
     this.game.setupStandardBoard();
     this.game.startGame();
@@ -66,12 +72,29 @@ public class ChessBoard extends HBox {
     grid.setOnMousePressed(mouseEvent -> {
       this.moveStart = this.boardToTile(mouseEvent.getX(), mouseEvent.getY());
 
+
+      List<Piece> pieces = this.game.getBoard().getPieces(this.game.getCurrentPlayer());
+
+      for (Piece piece : pieces) {
+        if (piece.getPosition().equals(this.moveStart)) {
+          char symbol = piece.toAsciiSymbol();
+
+          Image image = pieceImages.getOrDefault(symbol, null);
+
+          if (image != null) {
+            scene.setCursor(new ImageCursor(image));
+          }
+        }
+      }
+
       this.revealAvailableMoves(moveStart);
     });
 
 
     grid.setOnMouseReleased(mouseEvent -> {
       Position point = this.boardToTile(mouseEvent.getX(), mouseEvent.getY());
+
+      scene.setCursor(Cursor.DEFAULT);
 
       List<Position> available = this.game.whereCanItMoveTo(this.moveStart);
 

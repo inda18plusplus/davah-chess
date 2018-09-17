@@ -51,7 +51,7 @@ class ChessScene extends Scene {
   }
 
   private void createChessBoard() {
-    this.board = new ChessBoard();
+    this.board = new ChessBoard(this);
     this.board.setAlignment(Pos.CENTER);
 
     this.root.setCenter(this.board);
