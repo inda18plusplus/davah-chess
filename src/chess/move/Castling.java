@@ -12,6 +12,15 @@ public class Castling extends Move {
   private Position rookPosAfter;
   private boolean queenside;
 
+  /**
+   * Constructor for the Castling class.
+   *
+   * @param kingPosBefore The position of the king before the move.
+   * @param kingPosAfter The position of the king after the move.
+   * @param rookPosBefore The position of the rook before the move.
+   * @param rookPosAfter The position of the rook after the move.
+   * @param queenside True if queenside, false if kingside.
+   */
   public Castling(
       Position kingPosBefore,
       Position kingPosAfter,

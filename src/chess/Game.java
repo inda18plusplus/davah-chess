@@ -3,7 +3,6 @@ package chess;
 import chess.move.Move;
 import chess.piece.Piece;
 
-
 import java.util.ArrayList;
 
 /** Implements a single chess game. TODO: Method to calculate where a piece can move */

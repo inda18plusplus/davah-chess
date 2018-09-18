@@ -1,5 +1,9 @@
 package chess.piece;
 
+import static chess.Game.Player.BLACK;
+import static chess.Game.Player.WHITE;
+import static chess.Game.RANK_COUNT;
+
 import chess.Board;
 import chess.Game;
 import chess.Position;
@@ -9,10 +13,6 @@ import chess.move.Move;
 import chess.move.Promotion;
 
 import java.util.ArrayList;
-
-import static chess.Game.Player.BLACK;
-import static chess.Game.Player.WHITE;
-import static chess.Game.RANK_COUNT;
 
 /** Implements a specific chess piece, the pawn. */
 public class Pawn extends Piece {

@@ -1,8 +1,9 @@
 package chess;
 
-import java.util.Objects;
 import static chess.Game.FILE_COUNT;
 import static chess.Game.RANK_COUNT;
+
+import java.util.Objects;
 
 /** Implements a position on a chess board, disregarding its content. */
 public class Position {

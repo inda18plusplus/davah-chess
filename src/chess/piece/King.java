@@ -1,5 +1,7 @@
 package chess.piece;
 
+import static chess.Game.FILE_COUNT;
+
 import chess.Board;
 import chess.Game;
 import chess.Position;
@@ -8,8 +10,6 @@ import chess.move.Castling;
 import chess.move.Move;
 
 import java.util.ArrayList;
-
-import static chess.Game.FILE_COUNT;
 
 /** Implements a specific chess piece, the king. */
 public class King extends Piece {
