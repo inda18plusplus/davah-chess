@@ -20,14 +20,14 @@ class GameTest {
 
   @Test
   void movement() {
-    assertFalse(game.makeMove("d5"));
-    assertTrue(game.makeMove("d4"));
+    assertFalse(game.tryMakeMove("d5"));
+    assertTrue(game.tryMakeMove("d4"));
     assertEquals(
             "rnbqkbnr\npppppppp\n........\n........\n...P....\n........\nPPP.PPPP\nRNBQKBNR\n",
             game.viewBoard());
     assertSame(Game.Player.BLACK, game.getCurrentPlayer());
-    assertFalse(game.makeMove("e4"));
-    assertTrue(game.makeMove("e5"));
+    assertFalse(game.tryMakeMove("e4"));
+    assertTrue(game.tryMakeMove("e5"));
     assertEquals(
             "rnbqkbnr\npppp.ppp\n........\n....p...\n...P....\n........\nPPP.PPPP\nRNBQKBNR\n",
             game.viewBoard());
@@ -36,10 +36,10 @@ class GameTest {
 
   @Test
   void capture() {
-    game.makeMove("d4");
-    game.makeMove("e5");
+    game.tryMakeMove("d4");
+    game.tryMakeMove("e5");
 
-    assertTrue(game.makeMove("dxe5"));
+    assertTrue(game.tryMakeMove("dxe5"));
     assertEquals(
             "rnbqkbnr\npppp.ppp\n........\n....P...\n........\n........\nPPP.PPPP\nRNBQKBNR\n",
             game.viewBoard());
@@ -47,10 +47,10 @@ class GameTest {
 
   @Test
   void foolsMate() {
-    game.makeMove("f3");
-    game.makeMove("e5");
-    game.makeMove("g4");
-    game.makeMove("Qh4#");
+    game.tryMakeMove("f3");
+    game.tryMakeMove("e5");
+    game.tryMakeMove("g4");
+    game.tryMakeMove("Qh4#");
     assertEquals(Game.State.BLACK_WIN, game.getState());
   }
 
@@ -67,6 +67,6 @@ class GameTest {
 
   @Test
   void MovingWithPositions() {
-    assertTrue(game.makeMove(new Position(1,0), new Position(2, 0)));
+    assertTrue(game.tryMakeMove(new Position(1,0), new Position(2, 0)));
   }
 }

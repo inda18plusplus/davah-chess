@@ -17,7 +17,7 @@ public class Main {
     Scanner inputScanner = new Scanner(System.in);
     while (inputScanner.hasNextLine()) {
       String move = inputScanner.nextLine();
-      game.makeMove(move);
+      game.tryMakeMove(move);
       System.out.println(game.viewBoard());
       System.out.println(game.viewState());
     }

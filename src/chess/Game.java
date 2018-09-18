@@ -178,7 +178,7 @@ public class Game {
    * @param moveNotation The move, in standard, actual (this time for real) algebraic notation.
    * @return Whether the move was legal and carried out properly.
    */
-  public boolean makeMove(String moveNotation) {
+  public boolean tryMakeMove(String moveNotation) {
     Move move = Move.createMove(moveNotation, board.getMoves(currentPlayer), board);
     if (move == null) {
       return false;
@@ -194,7 +194,7 @@ public class Game {
    * @param posAfter The position to move to.
    * @return Whether the move was legal and carried out properly.
    */
-  public boolean makeMove(Position posBefore, Position posAfter) {
+  public boolean tryMakeMove(Position posBefore, Position posAfter) {
     Move move = Move.createMove(posBefore, posAfter, board.getMoves(currentPlayer));
     if (move == null) {
       return false;
@@ -211,7 +211,7 @@ public class Game {
    * @param promoteTo The ascii identifier of the piece to promote to.
    * @return Whether the move was legal and carried out properly.
    */
-  public boolean makeMove(Position posBefore, Position posAfter, char promoteTo) {
+  public boolean tryMakeMove(Position posBefore, Position posAfter, char promoteTo) {
     Move move = Move.createMove(posBefore, posAfter, promoteTo, board.getMoves(currentPlayer));
     if (move == null) {
       return false;

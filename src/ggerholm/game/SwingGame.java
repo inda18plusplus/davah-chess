@@ -97,7 +97,7 @@ public class SwingGame extends JFrame implements Runnable {
           return;
         }
 
-        if (board.makeMove(selected, pos)) {
+        if (board.tryMakeMove(selected, pos)) {
           updateBoardView();
         }
 
@@ -138,7 +138,7 @@ public class SwingGame extends JFrame implements Runnable {
         .getNotation(legalMoves, board.getBoard());
 
     notation = notation.substring(0, notation.length() - 1) + prom;
-    return board.makeMove(notation);
+    return board.tryMakeMove(notation);
   }
 
   private void updateBoardView() {

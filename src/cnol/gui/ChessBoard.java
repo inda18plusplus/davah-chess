@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import chess.piece.Piece;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
@@ -99,10 +98,10 @@ public class ChessBoard extends HBox {
       List<Position> available = this.game.whereCanItMoveTo(this.moveStart);
 
       if (available.contains(point)) {
-        if (!this.game.makeMove(this.moveStart, point)) {
+        if (!this.game.tryMakeMove(this.moveStart, point)) {
           // Has to promote
           char promotion = this.queryPromotion();
-          this.game.makeMove(this.moveStart, point, promotion);
+          this.game.tryMakeMove(this.moveStart, point, promotion);
         }
       }
 
