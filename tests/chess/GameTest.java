@@ -1,11 +1,14 @@
 package chess;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class GameTest {
 
@@ -66,7 +69,9 @@ class GameTest {
   }
 
   @Test
-  void MovingWithPositions() {
+  void movingWithPositions() {
     assertTrue(game.tryMakeMove(new Position(1,0), new Position(2, 0)));
+    assertTrue(game.tryMakeMove(new Position(6,2), new Position(4, 2)));
+    assertFalse(game.tryMakeMove(new Position(6,4), new Position(4, 4)));
   }
 }
