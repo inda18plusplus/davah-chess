@@ -2,14 +2,25 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = 10
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.0.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.0.3'
+}
+
+test {
+    useJUnitPlatform()
+
+    dependsOn 'cleanTest'
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 sourceSets {
@@ -26,5 +37,11 @@ sourceSets {
         java {
             srcDirs = ['tests']
         }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'cnol.gui.ChessApplication'
     }
 }
