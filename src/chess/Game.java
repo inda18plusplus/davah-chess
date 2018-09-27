@@ -4,6 +4,8 @@ import chess.move.Move;
 import chess.piece.Piece;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 /** Implements a single chess game. TODO: Method to calculate where a piece can move */
 public class Game {
@@ -152,6 +154,72 @@ public class Game {
     } else {
       return false;
     }
+  }
+
+  /**
+   * Sets up the chess board according to the random fischer variant.
+   *
+   * @return Whether the setup was successful.
+   */
+  public boolean setupRandomFischerVariant() {
+    if (state == State.SETUP && FILE_COUNT == 8 && RANK_COUNT >= 4) {
+      String blackRank = generateFischerRank();
+      String whiteRank = blackRank.toUpperCase();
+      for (int i = 0; i < 8; i++) {
+        this.placePiece(new Position(RANK_COUNT - 1, i), blackRank.charAt(i));
+        this.placePiece(new Position(RANK_COUNT - 2, i), 'p');
+        for (int j = 2; j < RANK_COUNT - 2; j++) {
+          removePiece(new Position(j, i));
+        }
+        this.placePiece(new Position(1, i), 'P');
+        this.placePiece(new Position(0, i), whiteRank.charAt(i));
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private String generateFischerRank() {
+    char rank[] = new char[FILE_COUNT];
+    Arrays.fill(rank, '.');
+    Random random = new Random();
+    random.setSeed(System.currentTimeMillis());
+
+    int leftRook = randomInt(random, 0, FILE_COUNT - 2);
+    rank[leftRook] = 'r';
+    int rightRook = randomInt(random, leftRook + 2, FILE_COUNT);
+    rank[rightRook] = 'r';
+
+    int kingPos = randomInt(random, leftRook + 1, rightRook);
+    rank[kingPos] = 'k';
+
+    int oddBishop;
+    do {
+      oddBishop = randomInt(random, 0, FILE_COUNT);
+    } while ((oddBishop & 1) != 1 || rank[oddBishop] != '.');
+    rank[oddBishop] = 'b';
+
+    int evenBishop;
+    do {
+      evenBishop = randomInt(random, 0, FILE_COUNT);
+    } while ((evenBishop & 1) != 0 || rank[evenBishop] != '.');
+    rank[evenBishop] = 'b';
+
+    char piecesLeftToPlace[] = new char[]{'n', 'n', 'q'};
+    for(int i = 0; i < piecesLeftToPlace.length; i++){
+      int pos;
+      do {
+        pos = randomInt(random, 0, FILE_COUNT);
+      } while(rank[pos] != '.');
+      rank[pos] = piecesLeftToPlace[i];
+    }
+
+    return new String(rank);
+  }
+
+  private int randomInt(Random random, int start, int end) {
+    return start + random.nextInt(end - start);
   }
 
   /**
