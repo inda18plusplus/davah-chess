@@ -5,7 +5,7 @@ import chess.piece.Piece;
 
 import java.util.ArrayList;
 
-/** Implements a single chess game. TODO: Method to calculate where a piece can move */
+/** Implements a single chess game. */
 public class Game {
 
   public static final int RANK_COUNT = 8;

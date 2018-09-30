@@ -1,28 +1,23 @@
 package chess;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class GameTest {
+public class GameTest {
 
   private Game game;
 
-  @BeforeEach
-  void setUp() {
+  @Test
+  public void movement() {
     game = new Game();
     game.setupStandardBoard();
     game.startGame();
-  }
-
-  @Test
-  void movement() {
     assertFalse(game.tryMakeMove("d5"));
     assertTrue(game.tryMakeMove("d4"));
     assertEquals(
@@ -38,7 +33,10 @@ class GameTest {
   }
 
   @Test
-  void capture() {
+  public void capture() {
+    game = new Game();
+    game.setupStandardBoard();
+    game.startGame();
     game.tryMakeMove("d4");
     game.tryMakeMove("e5");
 
@@ -49,7 +47,10 @@ class GameTest {
   }
 
   @Test
-  void foolsMate() {
+  public void foolsMate() {
+    game = new Game();
+    game.setupStandardBoard();
+    game.startGame();
     game.tryMakeMove("f3");
     game.tryMakeMove("e5");
     game.tryMakeMove("g4");
@@ -58,7 +59,10 @@ class GameTest {
   }
 
   @Test
-  void whereCanItMoveTo() {
+  public void whereCanItMoveTo() {
+    game = new Game();
+    game.setupStandardBoard();
+    game.startGame();
     ArrayList<Position> reach1 = game.whereCanItMoveTo(new Position("c2"));
     ArrayList<Position> reach2 = game.whereCanItMoveTo(new Position("d2"));
     ArrayList<Position> reach3 = game.whereCanItMoveTo(new Position("d2"));
@@ -69,9 +73,13 @@ class GameTest {
   }
 
   @Test
-  void movingWithPositions() {
+  public void movingWithPositions() {
+    game = new Game();
+    game.setupStandardBoard();
+    game.startGame();
     assertTrue(game.tryMakeMove(new Position(1,0), new Position(2, 0)));
     assertTrue(game.tryMakeMove(new Position(6,2), new Position(4, 2)));
     assertFalse(game.tryMakeMove(new Position(6,4), new Position(4, 4)));
   }
+
 }
