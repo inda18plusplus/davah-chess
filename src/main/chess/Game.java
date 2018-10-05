@@ -203,7 +203,7 @@ public class Game {
   }
 
   /**
-   * Validated and executes a move given by the user. The move must be a promotion.
+   * Validates and executes a move given by the user. The move must be a promotion.
    *
    * @param posBefore The position to move from.
    * @param posAfter The position to move to.
