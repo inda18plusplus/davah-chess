@@ -10,6 +10,7 @@ jar {
 }
 
 dependencies {
+	compile 'org.json:json:20180813'
 	testCompile 'junit:junit:4.12'
 }
 
