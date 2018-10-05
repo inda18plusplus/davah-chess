@@ -154,7 +154,9 @@ public class Connection {
    */
   public String readMove() {
     JSONObject jsonObject = new JSONObject(this.read());
-    return jsonObject.getString("from") + jsonObject.getString("to");
+    return jsonObject.getString("from")
+            + jsonObject.getString("to")
+            + jsonObject.getString("promotion");
   }
 
   /**
@@ -166,6 +168,7 @@ public class Connection {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("type", "response");
     jsonObject.put("response", success ? "ok" : "invalid");
+    this.write(jsonObject.toString());
   }
 
   /**

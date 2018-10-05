@@ -70,10 +70,20 @@ public class Main {
     while (game.getState() == Game.State.PLAY) {
       if (game.getCurrentPlayer() == player) {
         String move = inputScanner.nextLine();
+        if (move.length() < 4) {
+          continue;
+        }
         Position from = new Position(move.substring(0, 2));
         Position to = new Position(move.substring(2, 4));
-        if (game.tryMakeMove(from, to)) {
-          connection.sendMove(move, "");
+        String promotion = move.substring(4);
+        boolean success;
+        if (promotion.isEmpty()) {
+          success = game.tryMakeMove(from, to);
+        } else {
+          success = game.tryMakeMove(from, to, promotion.charAt(0));
+        }
+        if (success) {
+          connection.sendMove(move, promotion);
           if (connection.readResponseOk()) {
             System.out.println(game.viewBoard());
           } else {
@@ -86,7 +96,12 @@ public class Main {
         String move = connection.readMove();
         Position from = new Position(move.substring(0, 2));
         Position to = new Position(move.substring(2, 4));
-        connection.sendResponse(game.tryMakeMove(from, to));
+        String promotion = move.substring(4);
+        if (promotion.isEmpty()) {
+          connection.sendResponse(game.tryMakeMove(from, to));
+        } else {
+          connection.sendResponse(game.tryMakeMove(from, to, promotion.charAt(0)));
+        }
         System.out.println(game.viewBoard());
       }
     }
