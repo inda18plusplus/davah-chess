@@ -105,6 +105,7 @@ public class Main {
         System.out.println(game.viewBoard());
       }
     }
+    System.out.println(game.viewState());
   }
 
   private static void fail() {
