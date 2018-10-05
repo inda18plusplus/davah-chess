@@ -141,9 +141,9 @@ public class Connection {
   public void sendMove(String move, String promoteTo) {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("type", "move");
-    jsonObject.put("from", move.substring(0, 2));
-    jsonObject.put("to", move.substring(2, 4));
-    jsonObject.put("promotion", promoteTo);
+    jsonObject.put("from", move.substring(0, 2).toUpperCase());
+    jsonObject.put("to", move.substring(2, 4).toUpperCase());
+    jsonObject.put("promotion", promoteTo.toUpperCase());
     this.write(jsonObject.toString());
   }
 
@@ -154,9 +154,10 @@ public class Connection {
    */
   public String readMove() {
     JSONObject jsonObject = new JSONObject(this.read());
-    return jsonObject.getString("from")
-            + jsonObject.getString("to")
-            + jsonObject.getString("promotion");
+    System.out.println(jsonObject.toString());
+    return jsonObject.getString("from").toLowerCase()
+            + jsonObject.getString("to").toLowerCase()
+            + jsonObject.getString("promotion").toLowerCase();
   }
 
   /**
