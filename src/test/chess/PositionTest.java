@@ -50,5 +50,5 @@ public class PositionTest {
     assertTrue(position.isEqual(compare));
     assertEquals("f3", compare.getNotation());
   }
-  
+
 }
